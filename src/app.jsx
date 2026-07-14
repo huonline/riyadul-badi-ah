@@ -170,60 +170,64 @@ export default function App() {
             </div>
           </header>
 
-          {/* Area Lembaran Kitab */}
-          <main className="bg-[#fffdf9] p-6 md:p-10 rounded-2xl border border-amber-900/10 shadow-sm flex-1 mb-6 flex flex-col justify-between" dir="rtl">
-            
-            <div className="text-center border-b border-dashed border-stone-200 pb-3 mb-8">
-              <span className="text-xs tracking-widest text-amber-800 uppercase font-serif">
-                — {selectedBab.judulBab} —
+         {/* Area Lembaran Kitab */}
+<main className="bg-[#fffdf9] p-6 md:p-10 rounded-2xl border border-amber-900/10 shadow-sm flex-1 mb-6 flex flex-col justify-between" dir="rtl">
+  
+  <div className="text-center border-b border-dashed border-stone-200 pb-3 mb-8">
+    <span className="text-xs tracking-widest text-amber-800 uppercase font-serif">
+      — {selectedBab.judulBab} —
+    </span>
+  </div>
+
+  {/* Loop Kata Matan (Jarak Baris Atas-Bawah Dikunci Bertingkat) */}
+  <div className="flex flex-wrap items-start justify-start gap-x-2 gap-y-16 py-4" dir="rtl">
+    {selectedBab.kataList.map((item, index) => {
+      
+      // Konversi teks lugot sesuai mode yang dipilih
+      let displayLugot = '';
+      if (lugotMode === 'latin') displayLugot = item.lugot;
+      if (lugotMode === 'pegon') displayLugot = latinToPegon(item.lugot);
+
+      return (
+        /* KUNCI TINGGI BOX (h-16) supaya jarak ke baris matan di bawahnya SELALU KONSISTEN */
+        <div 
+          key={index} 
+          className="relative flex flex-col items-center justify-start h-16 min-w-[35px] px-1"
+        >
+          
+          {/* Teks Matan Arab (Rapat & Presisi) */}
+          <span className="text-3xl font-arabic text-stone-950 leading-none text-center">
+            {showHarakat ? item.arab : removeHarakat(item.arab)}
+          </span>
+
+          {/* Teks Lugot Miring (-35deg) Bebas Ke Samping */}
+          {lugotMode !== 'hide' && (
+            <div
+              className="absolute top-[80%] right-1 origin-top-right transition-all duration-300 pointer-events-none z-10"
+              style={{ transform: 'rotate(-35deg)' }}
+            >
+              <span 
+                className="text-[11px] text-amber-900 font-medium whitespace-nowrap bg-[#fffdf9]/90 px-1 rounded font-arabic border border-amber-900/10 shadow-2xs"
+                dir={lugotMode === 'pegon' ? 'rtl' : 'ltr'}
+              >
+                {displayLugot}
               </span>
             </div>
+          )}
 
-            {/* Loop Kata Matan & Lugot Miring (Dibuat Rapat) */}
-            <div className="flex flex-wrap items-end justify-start gap-x-3 gap-y-12 py-4" dir="rtl">
-              {selectedBab.kataList.map((item, index) => {
-                
-                // Konversi teks lugot sesuai mode yang dipilih
-                let displayLugot = '';
-                if (lugotMode === 'latin') displayLugot = item.lugot;
-                if (lugotMode === 'pegon') displayLugot = latinToPegon(item.lugot);
+        </div>
+      );
+    })}
+  </div>
 
-                return (
-                  <div key={index} className="relative flex flex-col items-center min-w-0 px-1">
-                    
-                    {/* Teks Matan Arab */}
-                    <span className="text-3xl font-arabic text-stone-950 leading-tight">
-                      {showHarakat ? item.arab : removeHarakat(item.arab)}
-                    </span>
+  {/* Footer Halaman */}
+  <div className="text-center pt-8 border-t border-stone-100 mt-auto">
+    <span className="text-xs text-stone-400 font-mono">
+      Halaman {selectedBab.id}
+    </span>
+  </div>
 
-                    {/* Teks Lugot Miring (-35deg) */}
-                    {lugotMode !== 'hide' && (
-                      <div
-                        className="absolute top-[90%] right-0 origin-top-right transition-all duration-300 pointer-events-none"
-                        style={{ transform: 'rotate(-35deg)' }}
-                      >
-                        <span 
-                          className="text-[11px] text-amber-900 font-medium whitespace-nowrap bg-[#fffdf9]/90 px-1 rounded font-arabic border border-amber-900/10 shadow-2xs"
-                          dir={lugotMode === 'pegon' ? 'rtl' : 'ltr'}
-                        >
-                          {displayLugot}
-                        </span>
-                      </div>
-                    )}
-
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Footer Halaman */}
-            <div className="text-center pt-8 border-t border-stone-100 mt-auto">
-              <span className="text-xs text-stone-400 font-mono">
-                Halaman {selectedBab.id}
-              </span>
-            </div>
-
-          </main>
+</main>
         </div>
       )}
 

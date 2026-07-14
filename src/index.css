@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@layer base {
+  /* Font default untuk seluruh web */
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f7f4ed;
+    color: #292524;
+  }
+
+  /* Class khusus untuk teks Arab Matan */
+  .font-arabic {
+    font-family: 'Amiri', serif;
+  }
+}
+
+/* Custom Utilities untuk Lugot Miring */
+.rotate-lugot {
+  transform: rotate(-35deg);
+  transform-origin: top right;
+}
+
+/* Mencegah text wrap aneh pada lugot */
+.lugot-box {
+  white-space: nowrap;
+  writing-mode: horizontal-tb;
+}

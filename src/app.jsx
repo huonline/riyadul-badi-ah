@@ -170,7 +170,7 @@ export default function App() {
             </div>
           </header>
 
-         {/* Area Lembaran Kitab */}
+       {/* Area Lembaran Kitab */}
 <main className="bg-[#fffdf9] p-6 md:p-10 rounded-2xl border border-amber-900/10 shadow-sm flex-1 mb-6 flex flex-col justify-between" dir="rtl">
   
   <div className="text-center border-b border-dashed border-stone-200 pb-3 mb-8">
@@ -179,8 +179,8 @@ export default function App() {
     </span>
   </div>
 
-  {/* Loop Kata Matan & Lugot Miring (Urutan Kanan ke Kiri) */}
-  <div className="flex flex-wrap items-end justify-start gap-x-8 gap-y-16 py-4" dir="rtl">
+  {/* Loop Kata Matan & Lugot Miring (Dibuat Rapat) */}
+  <div className="flex flex-wrap items-end justify-start gap-x-3 gap-y-12 py-4" dir="rtl">
     {selectedBab.kataList.map((item, index) => {
       
       // Konversi teks lugot sesuai mode yang dipilih
@@ -189,17 +189,17 @@ export default function App() {
       if (lugotMode === 'pegon') displayLugot = latinToPegon(item.lugot);
 
       return (
-        <div key={index} className="relative flex flex-col items-center min-w-[60px]">
+        <div key={index} className="relative flex flex-col items-center min-w-0 px-1">
           
           {/* Teks Matan Arab */}
-          <span className="text-3xl font-arabic text-stone-950 leading-none">
+          <span className="text-3xl font-arabic text-stone-950 leading-tight">
             {showHarakat ? item.arab : removeHarakat(item.arab)}
           </span>
 
           {/* Teks Lugot Miring (-35deg) */}
           {lugotMode !== 'hide' && (
             <div
-              className="absolute top-[85%] right-1 origin-top-right transition-all duration-300 pointer-events-none"
+              className="absolute top-[90%] right-0 origin-top-right transition-all duration-300 pointer-events-none"
               style={{ transform: 'rotate(-35deg)' }}
             >
               <span 
@@ -224,10 +224,3 @@ export default function App() {
   </div>
 
 </main>
-
-        </div>
-      )}
-
-    </div>
-  );
-}

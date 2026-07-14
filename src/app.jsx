@@ -67,7 +67,7 @@ export default function App() {
           <header className="bg-amber-900 text-amber-50 rounded-2xl p-6 mb-6 shadow-md relative overflow-hidden">
             <div className="relative z-10">
               <span className="text-xs uppercase tracking-widest text-amber-300 font-semibold">Kitab Digital</span>
-              <h1 className="text-3xl font-serif font-bold mt-1 mb-2">Safinatun Najah</h1>
+              <h1 className="text-3xl font-serif font-bold mt-1 mb-2">Riyadul Badi'ah</h1>
               <p className="text-sm text-amber-200/90 italic">Matan Arab & Lugot Sunda Jenggotan</p>
               
               <button 

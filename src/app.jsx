@@ -104,7 +104,7 @@ export default function App() {
                 className="bg-white p-4 rounded-xl border border-stone-200/80 hover:border-amber-700/40 hover:shadow-md transition cursor-pointer flex justify-between items-center group"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-amber-100/60 text-amber-900 font-serif font-bold flex items-center justify-center text-lg group-hover:bg-amber-800 group-hover:text-amber-50 transition">
+                  <div className="w-10 h-10 rounded-lg bg-amber-100/60 text-amber-900 font-serif font-bold flex items-center justify-center text-lg group-hover:bg-amber-800 group-hover:text-amber-100 transition">
                     {bab.noBab}
                   </div>
                   <div>
@@ -170,57 +170,63 @@ export default function App() {
             </div>
           </header>
 
-       {/* Area Lembaran Kitab */}
-<main className="bg-[#fffdf9] p-6 md:p-10 rounded-2xl border border-amber-900/10 shadow-sm flex-1 mb-6 flex flex-col justify-between" dir="rtl">
-  
-  <div className="text-center border-b border-dashed border-stone-200 pb-3 mb-8">
-    <span className="text-xs tracking-widest text-amber-800 uppercase font-serif">
-      — {selectedBab.judulBab} —
-    </span>
-  </div>
-
-  {/* Loop Kata Matan & Lugot Miring (Dibuat Rapat) */}
-  <div className="flex flex-wrap items-end justify-start gap-x-3 gap-y-12 py-4" dir="rtl">
-    {selectedBab.kataList.map((item, index) => {
-      
-      // Konversi teks lugot sesuai mode yang dipilih
-      let displayLugot = '';
-      if (lugotMode === 'latin') displayLugot = item.lugot;
-      if (lugotMode === 'pegon') displayLugot = latinToPegon(item.lugot);
-
-      return (
-        <div key={index} className="relative flex flex-col items-center min-w-0 px-1">
-          
-          {/* Teks Matan Arab */}
-          <span className="text-3xl font-arabic text-stone-950 leading-tight">
-            {showHarakat ? item.arab : removeHarakat(item.arab)}
-          </span>
-
-          {/* Teks Lugot Miring (-35deg) */}
-          {lugotMode !== 'hide' && (
-            <div
-              className="absolute top-[90%] right-0 origin-top-right transition-all duration-300 pointer-events-none"
-              style={{ transform: 'rotate(-35deg)' }}
-            >
-              <span 
-                className="text-[11px] text-amber-900 font-medium whitespace-nowrap bg-[#fffdf9]/90 px-1 rounded font-arabic border border-amber-900/10 shadow-2xs"
-                dir={lugotMode === 'pegon' ? 'rtl' : 'ltr'}
-              >
-                {displayLugot}
+          {/* Area Lembaran Kitab */}
+          <main className="bg-[#fffdf9] p-6 md:p-10 rounded-2xl border border-amber-900/10 shadow-sm flex-1 mb-6 flex flex-col justify-between" dir="rtl">
+            
+            <div className="text-center border-b border-dashed border-stone-200 pb-3 mb-8">
+              <span className="text-xs tracking-widest text-amber-800 uppercase font-serif">
+                — {selectedBab.judulBab} —
               </span>
             </div>
-          )}
 
+            {/* Loop Kata Matan & Lugot Miring (Dibuat Rapat) */}
+            <div className="flex flex-wrap items-end justify-start gap-x-3 gap-y-12 py-4" dir="rtl">
+              {selectedBab.kataList.map((item, index) => {
+                
+                // Konversi teks lugot sesuai mode yang dipilih
+                let displayLugot = '';
+                if (lugotMode === 'latin') displayLugot = item.lugot;
+                if (lugotMode === 'pegon') displayLugot = latinToPegon(item.lugot);
+
+                return (
+                  <div key={index} className="relative flex flex-col items-center min-w-0 px-1">
+                    
+                    {/* Teks Matan Arab */}
+                    <span className="text-3xl font-arabic text-stone-950 leading-tight">
+                      {showHarakat ? item.arab : removeHarakat(item.arab)}
+                    </span>
+
+                    {/* Teks Lugot Miring (-35deg) */}
+                    {lugotMode !== 'hide' && (
+                      <div
+                        className="absolute top-[90%] right-0 origin-top-right transition-all duration-300 pointer-events-none"
+                        style={{ transform: 'rotate(-35deg)' }}
+                      >
+                        <span 
+                          className="text-[11px] text-amber-900 font-medium whitespace-nowrap bg-[#fffdf9]/90 px-1 rounded font-arabic border border-amber-900/10 shadow-2xs"
+                          dir={lugotMode === 'pegon' ? 'rtl' : 'ltr'}
+                        >
+                          {displayLugot}
+                        </span>
+                      </div>
+                    )}
+
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Footer Halaman */}
+            <div className="text-center pt-8 border-t border-stone-100 mt-auto">
+              <span className="text-xs text-stone-400 font-mono">
+                Halaman {selectedBab.id}
+              </span>
+            </div>
+
+          </main>
         </div>
-      );
-    })}
-  </div>
+      )}
 
-  {/* Footer Halaman */}
-  <div className="text-center pt-8 border-t border-stone-100 mt-auto">
-    <span className="text-xs text-stone-400 font-mono">
-      Halaman {selectedBab.id}
-    </span>
-  </div>
-
-</main>
+    </div>
+  );
+}

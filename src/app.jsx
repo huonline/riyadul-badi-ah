@@ -72,7 +72,7 @@ export default function App() {
                 className="bg-white p-4 rounded-xl border border-stone-200/80 hover:border-amber-700/40 hover:shadow-md transition cursor-pointer flex justify-between items-center group"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-amber-100/60 text-amber-900 font-serif font-bold flex items-center justify-center text-lg group-hover:bg-amber-800 group-hover:text-amber-100 transition">
+                  <div className="w-10 h-10 rounded-lg bg-amber-100/60 text-amber-900 font-serif font-bold flex items-center justify-center text-lg group-hover:bg-amber-800 group-hover:text-amber-50 transition">
                     {bab.noBab}
                   </div>
                   <div>
@@ -144,58 +144,72 @@ export default function App() {
               </span>
             </div>
 
-         <div
-    dir="rtl"
-    className="
-        kitab-page
-        select-all
-        text-stone-950
-        font-arabic
-    "
->
-    {selectedBab.kataList.map((item, index) => {
-
-        const kataMatan =
-            showHarakat
-                ? item.arab
-                : removeHarakat(item.arab);
-
-        let displayLugot = "";
-
-        if (lugotMode === "latin")
-            displayLugot = item.lugot;
-
-        if (lugotMode === "pegon")
-            displayLugot = latinToPegon(item.lugot);
-
-        return (
-
-            <span
-                key={index}
-                className="kata"
+            <div
+              dir="rtl"
+              className="
+                kitab-page
+                select-all
+                text-stone-950
+                font-arabic
+              "
             >
+              {selectedBab.kataList.map((item, index) => {
 
-                <span className="arab">
-                    {kataMatan}
-                </span>
+                const kataMatan =
+                  showHarakat
+                    ? item.arab
+                    : removeHarakat(item.arab);
 
-                {lugotMode !== "hide" && (
+                let displayLugot = "";
 
-                    <span
-                        className={`lugot ${
-                            lugotMode === "pegon"
-                                ? "rtl"
-                                : "ltr"
-                        }`}
-                    >
-                        {displayLugot}
+                if (lugotMode === "latin")
+                  displayLugot = item.lugot;
+
+                if (lugotMode === "pegon")
+                  displayLugot = latinToPegon(item.lugot);
+
+                return (
+
+                  <span
+                    key={index}
+                    className="kata"
+                  >
+
+                    <span className="arab">
+                      {kataMatan}
                     </span>
 
-                )}
+                    {lugotMode !== "hide" && (
 
-            </span>
+                      <span
+                        className={`lugot ${
+                          lugotMode === "pegon"
+                            ? "rtl"
+                            : "ltr"
+                        }`}
+                      >
+                        {displayLugot}
+                      </span>
 
-        );
+                    )}
 
-    })}
-</div>
+                  </span>
+
+                );
+
+              })}
+            </div>
+
+          </main>
+
+          {/* Footer / Info Halaman */}
+          <footer className="text-xs text-center text-stone-500 py-4">
+            <p>© Riyadul Badi'ah - Kitab Digital</p>
+          </footer>
+
+        </div>
+      )}
+
+    </div>
+  );
+}

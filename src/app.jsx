@@ -20,7 +20,7 @@ export default function App() {
   const openBab = (bab) => {
     setSelectedBab(bab);
     setCurrentView('reader');
-    window.scrollTo(0, 0); // Memastikan selalu mulai dari atas saat ganti bab
+    window.scrollTo(0, 0); 
   };
 
   return (
@@ -103,7 +103,7 @@ export default function App() {
             </div>
 
             <div 
-              className="w-full text-justify text-stone-950 font-arabic text-4xl leading-[6.5rem] tracking-tight select-all"
+              className="w-full text-justify text-stone-950 font-arabic text-4xl leading-[7.5rem] tracking-tight select-all"
               style={{ 
                 textAlignLast: 'justify',  
                 textJustify: 'distribute'
@@ -119,30 +119,39 @@ export default function App() {
                 return (
                   <React.Fragment key={index}>
                     <span className="relative inline">
-                      {/* Teks Arab Matan diamankan di z-10 agar selalu di atas */}
+                      
                       <span className="relative z-10">{kataMatan}</span>
 
-                      {/* AREA LUGOT: Dikunci permanen Rata Kanan dan Arah RTL */}
+                      {/* AREA LUGOT: Rotasi Asli dengan Trik Bottom-Up CSS */}
                       {lugotMode !== 'hide' && (
                         <span
                           className="absolute pointer-events-none z-0"
                           style={{ 
-                            top: '48px',
+                            top: '55px', 
                             right: '0',
-                            transform: 'rotate(-28deg)',
-                            transformOrigin: 'top right',
-                            width: '90px', 
-                            textAlign: 'right', // Permanen rata kanan
-                            textAlignLast: 'auto', 
-                            textJustify: 'auto',
-                            direction: 'rtl' // Permanen paksa baris baru jatuh ke kiri
+                            transform: 'rotate(-28deg)', 
+                            transformOrigin: 'top right', 
+                            width: '100px'
                           }}
                         >
+                          {/* 
+                            KUNCI UTAMA: 
+                            1. flex-wrap-reverse: Memaksa baris baru naik ke atas (bottom-up)
+                            2. split(' '): Memecah kalimat menjadi kata per kata agar rapi
+                            3. justifyContent: Menempelkan teks ke kanan kotak
+                          */}
                           <span 
-                            className="inline-block text-[10px] leading-[1.2rem] text-amber-950 font-semibold whitespace-normal break-words bg-[#fffdf9]/95 px-1 py-0.5 rounded shadow-sm border border-stone-200/50 text-right"
-                            dir="rtl"
+                            className="flex flex-wrap-reverse text-[10px] leading-[1.3rem] text-amber-950 font-semibold bg-[#fffdf9]/95 p-1 rounded shadow-sm border border-stone-200/50"
+                            style={{ 
+                              direction: lugotMode === 'pegon' ? 'rtl' : 'ltr',
+                              justifyContent: lugotMode === 'pegon' ? 'flex-start' : 'flex-end',
+                            }}
                           >
-                            {displayLugot}
+                            {displayLugot.split(' ').map((word, wIdx) => (
+                              <span key={wIdx} className="mx-[1.5px] whitespace-nowrap">
+                                {word}
+                              </span>
+                            ))}
                           </span>
                         </span>
                       )}

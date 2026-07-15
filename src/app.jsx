@@ -146,8 +146,8 @@ export default function App() {
               </span>
             </div>
 
-            {/* Loop Kata Matan & Lugot Jenggotan Modern */}
-            <div className="flex flex-wrap items-start justify-start gap-x-3 gap-y-20 py-4" dir="rtl">
+            {/* PENGATURAN BARU: Rata Kiri Kanan Sisi ke Sisi (Justify) */}
+            <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-20 py-4 w-full text-justify" dir="rtl">
               {selectedBab.kataList.map((item, index) => {
                 
                 // Konversi teks lugot sesuai mode yang dipilih
@@ -158,21 +158,21 @@ export default function App() {
                 return (
                   <div 
                     key={index} 
-                    className="relative flex flex-col items-center justify-start min-w-[50px] px-1"
+                    className="relative flex flex-col items-center justify-start min-w-[45px] px-0.5 flex-grow text-center"
                   >
                     
                     {/* Teks Matan Arab */}
-                    <span className="text-3xl font-arabic text-stone-950 leading-none text-center z-10">
+                    <span className="text-3xl font-arabic text-stone-950 leading-none text-center z-10 block w-full whitespace-nowrap">
                       {showHarakat ? item.arab : removeHarakat(item.arab)}
                     </span>
 
-                    {/* Teks Lugot Miring - Rapat ke Atas & Bisa 2 Baris Miring ke Bawah */}
+                    {/* Teks Lugot Miring */}
                     {lugotMode !== 'hide' && (
                       <div
-                        className="absolute top-[65%] right-0 origin-top-right transition-all duration-300 pointer-events-none z-0"
+                        className="absolute top-[75%] right-0 origin-top-right transition-all duration-300 pointer-events-none z-0"
                         style={{ 
                           transform: 'rotate(-30deg)',
-                          width: '90px' /* Kunci lebar area lugot agar otomatis turun baris */
+                          width: '85px'
                         }}
                       >
                         <div 
@@ -187,6 +187,8 @@ export default function App() {
                   </div>
                 );
               })}
+              {/* Elemen bantu pengisi spasi baris terakhir agar tidak terlalu melar terpisah jauh */}
+              <div className="flex-grow-[100] min-w-[45px]"></div>
             </div>
 
             {/* Footer Halaman */}

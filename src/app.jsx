@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { dummyKitab } from './dataRiyad.js';
-import { latinToPegon, removeHarakat } from './utils/transliterasi';
+import { removeHarakat } from './utils/transliterasi';
 
 export default function App() {
   const [currentView, setCurrentView] = useState('home'); // 'home' | 'reader'
@@ -9,7 +9,6 @@ export default function App() {
 
   // Setting Mode Pembaca
   const [showHarakat, setShowHarakat] = useState(true);
-  const [lugotMode, setLugotMode] = useState('pegon'); // 'hide' | 'latin' | 'pegon'
 
   // Filter Bab berdasarkan pencarian
   const filteredBab = dummyKitab.filter(bab => 
@@ -36,7 +35,7 @@ export default function App() {
             <div className="relative z-10">
               <span className="text-xs uppercase tracking-widest text-amber-300 font-semibold">Kitab Digital</span>
               <h1 className="text-3xl font-serif font-bold mt-1 mb-2">Riyadul Badi'ah</h1>
-              <p className="text-sm text-amber-200/90 italic">Matan Arab & Lugot Sunda Jenggotan</p>
+              <p className="text-sm text-amber-200/90 italic">Matan Arab Only - Rata Kanan Kiri</p>
               
               <button 
                 onClick={() => openBab(dummyKitab[0])}
@@ -98,7 +97,7 @@ export default function App() {
         <div className="min-h-screen flex flex-col justify-between max-w-3xl mx-auto p-4 md:p-6">
           
           {/* Top Bar / Navigation */}
-          <header className="sticky top-2 bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-stone-200 shadow-sm z-20 flex flex-wrap justify-between items-center gap-2 mb-6">
+          <header className="sticky top-2 bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-stone-200 shadow-sm z-20 flex justify-between items-center mb-6">
             <button
               onClick={() => setCurrentView('home')}
               className="text-xs font-semibold px-3 py-1.5 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-lg transition cursor-pointer"
@@ -110,35 +109,21 @@ export default function App() {
               {selectedBab.judulBab}
             </span>
 
-            {/* Controller / Switcher Toggle */}
-            <div className="flex items-center gap-2">
-              {/* Toggle Harakat */}
-              <button
-                onClick={() => setShowHarakat(!showHarakat)}
-                className={`text-xs px-2.5 py-1 rounded-md border font-serif transition cursor-pointer ${
-                  showHarakat 
-                    ? 'bg-amber-800 text-white border-amber-800' 
-                    : 'bg-white text-stone-600 border-stone-300'
-                }`}
-              >
-                {showHarakat ? 'شَكْل' : 'سكون'}
-              </button>
-
-              {/* Toggle Mode Lugot */}
-              <select
-                value={lugotMode}
-                onChange={(e) => setLugotMode(e.target.value)}
-                className="text-xs bg-white border border-stone-300 rounded-md px-2 py-1 focus:outline-none cursor-pointer"
-              >
-                <option value="pegon">Lugot Pegon</option>
-                <option value="latin">Lugot Latin</option>
-                <option value="hide">Kosongan</option>
-              </select>
-            </div>
+            {/* Controller Toggle Harakat */}
+            <button
+              onClick={() => setShowHarakat(!showHarakat)}
+              className={`text-xs px-2.5 py-1 rounded-md border font-serif transition cursor-pointer ${
+                showHarakat 
+                  ? 'bg-amber-800 text-white border-amber-800' 
+                  : 'bg-white text-stone-600 border-stone-300'
+              }`}
+            >
+              {showHarakat ? 'شَكْل' : 'سكون'}
+            </button>
           </header>
 
           {/* Area Lembaran Kitab */}
-          <main className="bg-[#fffdf9] p-6 md:p-10 rounded-2xl border border-amber-900/10 shadow-sm flex-1 mb-6 flex flex-col justify-between" dir="rtl">
+          <main className="bg-[#fffdf9] p-6 md:p-12 rounded-2xl border border-amber-900/10 shadow-sm flex-1 mb-6 flex flex-col justify-between" dir="rtl">
             
             <div className="text-center border-b border-dashed border-stone-200 pb-3 mb-8">
               <span className="text-xs tracking-widest text-amber-800 uppercase font-serif">
@@ -146,48 +131,20 @@ export default function App() {
               </span>
             </div>
 
-            {/* Menggunakan Grid agar sisi kiri dan kanan mepet pas ke garis tepi secara otomatis */}
+            {/* BLOK MUSHAF: Menggunakan paragraf murni dengan modifikasi CSS Justify tingkat lanjut */}
             <div 
-              className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-x-2 gap-y-20 py-4 w-full" 
-              dir="rtl"
+              className="w-full text-justify text-stone-950 font-arabic text-4xl leading-[4.5rem] tracking-tight"
+              style={{ 
+                textJustify: 'inter-word',
+                textAlignLast: 'justify'
+              }}
             >
               {selectedBab.kataList.map((item, index) => {
-                
-                // Konversi teks lugot sesuai mode yang dipilih
-                let displayLugot = '';
-                if (lugotMode === 'latin') displayLugot = item.lugot;
-                if (lugotMode === 'pegon') displayLugot = latinToPegon(item.lugot);
-
+                const kataMatan = showHarakat ? item.arab : removeHarakat(item.arab);
                 return (
-                  <div 
-                    key={index} 
-                    className="relative flex flex-col items-center justify-center w-full text-center px-0.5"
-                  >
-                    
-                    {/* Teks Matan Arab Rapat Horizontal & Besar */}
-                    <span className="text-4xl font-arabic text-stone-950 block tracking-tight leading-none">
-                      {showHarakat ? item.arab : removeHarakat(item.arab)}
-                    </span>
-
-                    {/* Teks Lugot Miring Sempit */}
-                    {lugotMode !== 'hide' && (
-                      <div
-                        className="absolute top-[85%] right-1 origin-top-right pointer-events-none z-0"
-                        style={{ 
-                          transform: 'rotate(-28deg)',
-                          width: '75px'
-                        }}
-                      >
-                        <div 
-                          className="text-[9px] leading-tight text-amber-950 font-medium whitespace-normal break-words bg-[#fffdf9]/95 px-1 py-0.5 rounded border border-amber-900/5 shadow-3xs flex flex-col items-start text-right"
-                          dir={lugotMode === 'pegon' ? 'rtl' : 'ltr'}
-                        >
-                          {displayLugot}
-                        </div>
-                      </div>
-                    )}
-
-                  </div>
+                  <span key={index} className="inline mx-[0.25rem]">
+                    {kataMatan}
+                  </span>
                 );
               })}
             </div>

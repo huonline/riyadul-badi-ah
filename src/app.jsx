@@ -146,8 +146,8 @@ export default function App() {
               </span>
             </div>
 
-            {/* PENGATURAN BARU: Rapat horizontal di tengah sebagai satu kesatuan kalimat */}
-            <div className="flex flex-wrap items-start justify-center gap-x-1 gap-y-20 py-4 w-full" dir="rtl">
+            {/* PENGATURAN BARU: Menggunakan Gaya Text Justify Al-Qur'an Alami */}
+            <div className="w-full text-justify py-4 space-y-y-20 block" style={{ textAlign: 'justify', textJustify: 'inter-word' }} dir="rtl">
               {selectedBab.kataList.map((item, index) => {
                 
                 // Konversi teks lugot sesuai mode yang dipilih
@@ -158,18 +158,18 @@ export default function App() {
                 return (
                   <div 
                     key={index} 
-                    className="relative flex flex-col items-center justify-start min-w-[35px] px-0"
+                    className="relative inline-block text-center mx-1 mb-20 min-w-[30px]"
                   >
                     
                     {/* Teks Matan Arab */}
-                    <span className="text-3xl font-arabic text-stone-950 leading-none text-center z-10 block w-full whitespace-nowrap">
+                    <span className="text-3xl font-arabic text-stone-950 leading-none text-center z-10 block whitespace-nowrap">
                       {showHarakat ? item.arab : removeHarakat(item.arab)}
                     </span>
 
                     {/* Teks Lugot Miring */}
                     {lugotMode !== 'hide' && (
                       <div
-                        className="absolute top-[75%] right-0 origin-top-right transition-all duration-300 pointer-events-none z-0"
+                        className="absolute top-[85%] right-0 origin-top-right transition-all duration-300 pointer-events-none z-0"
                         style={{ 
                           transform: 'rotate(-30deg)',
                           width: '85px'

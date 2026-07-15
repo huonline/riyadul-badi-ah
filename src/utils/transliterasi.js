@@ -1,16 +1,16 @@
-// Fungsi untuk mengubah huruf Latin menjadi Arab Pegon Sunda yang Benar
+// Fungsi transliterasi Pegon dengan metode komposisi huruf langsung
 export function latinToPegon(text) {
   if (!text) return '';
   
   let hasil = text.toLowerCase();
 
-  // 1. Hapus huruf asing
-  hasil = hasil.replaceAll('x', '');
+  // 1. Kunci kata khusus agar tidak dipecah sistem
+  if (hasil === 'allah') return 'الله';
 
-  // 2. Ganti kombinasi huruf konsonan khusus terlebih dahulu
+  // 2. Ganti kombinasi 2 huruf (Konsonan Khusus)
   const konsonanKhusus = {
     'ng': 'ڠ', // Gain titik tiga
-    'ny': 'ۑ', // Ya titik tiga (Ny) -> Contoh: nyebat jadi ۑبات
+    'ny': 'ۑ', // Ya titik tiga
     'ch': 'چ', // Ca
     'kh': 'خ',
     'sh': 'ش'
@@ -20,33 +20,28 @@ export function latinToPegon(text) {
     hasil = hasil.replaceAll(latin, pegon);
   }
 
-  // 3. Ganti huruf vokal menjadi huruf saksi Pegon (Tanpa Hamzah kaku di tengah)
-  const vokalPegon = {
-    'a': 'ا',   // Alif biasa untuk vokal 'a' -> Contoh: kalawan jadi كلوان
-    'i': 'ي',   // Ya biasa
-    'u': 'و',   // Wawu biasa
-    'e': '',    // Huruf 'e' (pepet) dalam pegon sunda sering tidak ditulis/lebur
-    'o': 'و'    // Wawu
-  };
-
-  for (const [latin, pegon] of Object.entries(vokalPegon)) {
-    hasil = hasil.replaceAll(latin, pegon);
-  }
-
-  // 4. Ganti konsonan tunggal standar
-  const konsonanTunggal = {
+  // 3. Ganti huruf satu per satu (Konsonan & Vokal sebagai huruf saksi langsung)
+  const kamusHuruf = {
+    // Vokal langsung jadi huruf saksi
+    'a': 'ا',
+    'i': 'ا', // atau bisa diganti 'ي' jika ingin "itu" jadi ايتو
+    'u': 'و',
+    'e': 'ي',
+    'o': 'و',
+    
+    // Konsonan standar
     'b': 'ب',
     'c': 'چ',
     'd': 'د',
     'f': 'ف',
-    'g': 'ݢ', // Kaf titik (G)
+    'g': 'ݢ', // Kaf titik tiga / titik satu untuk G
     'h': 'ه',
     'j': 'ج',
     'k': 'ك',
     'l': 'ل',
     'm': 'م',
     'n': 'ن',
-    'p': 'ڤ', // Fa titik tiga (P)
+    'p': 'ڤ', // Fa titik tiga untuk P
     'q': 'ق',
     'r': 'ر',
     's': 'س',
@@ -55,10 +50,12 @@ export function latinToPegon(text) {
     'w': 'و',
     'y': 'ي',
     'z': 'ز',
-    ' ': ' '
+    'x': '',
+    ' ': ' ' // Spasi tetap spasi
   };
 
-  return hasil.split('').map(char => konsonanTunggal[char] || char).join('');
+  // Susun komposisi hurufnya secara berurutan
+  return hasil.split('').map(char => kamusHuruf[char] || char).join('');
 }
 
 // Fungsi pembantu menghilangkan harakat matan

@@ -31,7 +31,6 @@ export default function App() {
       {currentView === 'home' && (
         <div className="max-w-2xl mx-auto p-4 md:p-6 pb-20">
           
-          {/* Header Cover */}
           <header className="bg-amber-900 text-amber-50 rounded-2xl p-6 mb-6 shadow-md relative overflow-hidden">
             <div className="relative z-10">
               <span className="text-xs uppercase tracking-widest text-amber-300 font-semibold">Kitab Digital</span>
@@ -50,7 +49,6 @@ export default function App() {
             </div>
           </header>
 
-          {/* Search Bar */}
           <div className="mb-6">
             <input
               type="text"
@@ -61,7 +59,6 @@ export default function App() {
             />
           </div>
 
-          {/* Daftar Bab */}
           <div className="space-y-3">
             <h2 className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2 px-1">Daftar Bab</h2>
             
@@ -72,7 +69,7 @@ export default function App() {
                 className="bg-white p-4 rounded-xl border border-stone-200/80 hover:border-amber-700/40 hover:shadow-md transition cursor-pointer flex justify-between items-center group"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-amber-100/60 text-amber-900 font-serif font-bold flex items-center justify-center text-lg group-hover:bg-amber-800 group-hover:text-amber-50 transition">
+                  <div className="w-10 h-10 rounded-lg bg-amber-100/60 text-amber-900 font-serif font-bold flex items-center justify-center text-lg group-hover:bg-amber-800 group-hover:text-amber-100 transition">
                     {bab.noBab}
                   </div>
                   <div>
@@ -80,7 +77,6 @@ export default function App() {
                     <p className="text-xs text-stone-500">{bab.deskripsi}</p>
                   </div>
                 </div>
-
                 <span className="text-xs text-stone-400 font-mono">
                   {bab.jumlahKata} kata
                 </span>
@@ -97,7 +93,6 @@ export default function App() {
       {currentView === 'reader' && selectedBab && (
         <div className="min-h-screen flex flex-col justify-between max-w-3xl mx-auto p-4 md:p-6">
           
-          {/* Top Bar / Navigation */}
           <header className="sticky top-2 bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-stone-200 shadow-sm z-20 flex justify-between items-center mb-6">
             <button
               onClick={() => setCurrentView('home')}
@@ -110,7 +105,6 @@ export default function App() {
               {selectedBab.judulBab}
             </span>
 
-            {/* Controller Toggles */}
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowHarakat(!showHarakat)}
@@ -135,7 +129,6 @@ export default function App() {
             </div>
           </header>
 
-          {/* Area Lembaran Kitab */}
           <main className="bg-[#fffdf9] p-6 md:p-12 rounded-2xl border border-amber-900/10 shadow-sm flex-1 mb-6 flex flex-col justify-between" dir="rtl">
             
             <div className="text-center border-b border-dashed border-stone-200 pb-3 mb-8">
@@ -144,69 +137,60 @@ export default function App() {
               </span>
             </div>
 
-            <div
-              dir="rtl"
-              className="
-                kitab-page
-                select-all
-                text-stone-950
-                font-arabic
-              "
+            {/* AREA UTAMA: Menggunakan inline murni agar fungsi Justify browser bekerja sempurna */}
+            <div 
+              className="w-full text-justify text-stone-950 font-arabic text-4xl leading-[6.5rem] tracking-tight select-all"
+              style={{ 
+                textAlignLast: 'justify',  
+                textJustify: 'auto' // Mengizinkan browser mengatur spasi dan Kasyidah secara natural
+              }}
             >
               {selectedBab.kataList.map((item, index) => {
-
-                const kataMatan =
-                  showHarakat
-                    ? item.arab
-                    : removeHarakat(item.arab);
-
-                let displayLugot = "";
-
-                if (lugotMode === "latin")
-                  displayLugot = item.lugot;
-
-                if (lugotMode === "pegon")
-                  displayLugot = latinToPegon(item.lugot);
+                const kataMatan = showHarakat ? item.arab : removeHarakat(item.arab);
+                
+                let displayLugot = '';
+                if (lugotMode === 'latin') displayLugot = item.lugot;
+                if (lugotMode === 'pegon') displayLugot = latinToPegon(item.lugot);
 
                 return (
-
-                  <span
-                    key={index}
-                    className="kata"
-                  >
-
-                    <span className="arab">
+                  <React.Fragment key={index}>
+                    {/* Menggunakan INLINE, bukan INLINE-BLOCK */}
+                    <span className="relative inline">
                       {kataMatan}
+
+                      {/* Lugot diletakkan absolut ke elemen span inline */}
+                      {lugotMode !== 'hide' && (
+                        <span
+                          className="absolute top-[85%] right-0 pointer-events-none z-0"
+                          style={{ 
+                            transform: 'rotate(-28deg)',
+                            width: '75px',
+                            transformOrigin: 'top right'
+                          }}
+                        >
+                          <span 
+                            className="text-[9px] leading-tight text-amber-900/90 font-medium whitespace-normal break-words bg-[#fffdf9]/70 px-0.5 rounded flex flex-col items-start text-right"
+                            dir={lugotMode === 'pegon' ? 'rtl' : 'ltr'}
+                          >
+                            {displayLugot}
+                          </span>
+                        </span>
+                      )}
                     </span>
-
-                    {lugotMode !== "hide" && (
-
-                      <span
-                        className={`lugot ${
-                          lugotMode === "pegon"
-                            ? "rtl"
-                            : "ltr"
-                        }`}
-                      >
-                        {displayLugot}
-                      </span>
-
-                    )}
-
-                  </span>
-
+                    {/* Menambahkan spasi manual antar elemen agar teks bisa terpotong ke baris baru */}
+                    {" "}
+                  </React.Fragment>
                 );
-
               })}
             </div>
 
+            <div className="text-center pt-8 border-t border-stone-100 mt-auto">
+              <span className="text-xs text-stone-400 font-mono">
+                Halaman {selectedBab.id}
+              </span>
+            </div>
+
           </main>
-
-          {/* Footer / Info Halaman */}
-          <footer className="text-xs text-center text-stone-500 py-4">
-            <p>© Riyadul Badi'ah - Kitab Digital</p>
-          </footer>
-
         </div>
       )}
 

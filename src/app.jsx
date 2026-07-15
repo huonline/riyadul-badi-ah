@@ -146,8 +146,16 @@ export default function App() {
               </span>
             </div>
 
-            {/* PENGATURAN BARU: Menggunakan Gaya Text Justify Al-Qur'an Alami */}
-            <div className="w-full text-justify py-4 space-y-y-20 block" style={{ textAlign: 'justify', textJustify: 'inter-word' }} dir="rtl">
+            {/* Layout Al-Qur'an Style: text-justify untuk meratakan sisi kanan dan kiri */}
+            <div 
+              className="text-justify py-4" 
+              dir="rtl"
+              style={{ 
+                textJustify: 'inter-word', 
+                textAlignLast: 'justify',
+                lineHeight: '6.5rem' // Mengunci jarak antar-baris atas-bawah agar pas dengan lugot
+              }}
+            >
               {selectedBab.kataList.map((item, index) => {
                 
                 // Konversi teks lugot sesuai mode yang dipilih
@@ -156,27 +164,29 @@ export default function App() {
                 if (lugotMode === 'pegon') displayLugot = latinToPegon(item.lugot);
 
                 return (
+                  /* Setiap kata dibungkus inline-block agar mengalir alami mengikuti text-justify */
                   <div 
                     key={index} 
-                    className="relative inline-block text-center mx-1 mb-20 min-w-[30px]"
+                    className="inline-block relative min-w-[65px] px-2 mx-1 text-center"
+                    style={{ verticalAlign: 'middle' }}
                   >
                     
-                    {/* Teks Matan Arab */}
-                    <span className="text-3xl font-arabic text-stone-950 leading-none text-center z-10 block whitespace-nowrap">
+                    {/* Teks Matan Arab (Font diperbesar menjadi text-4xl agar lebih rapat & mantap) */}
+                    <span className="text-4xl font-arabic text-stone-950 block select-all">
                       {showHarakat ? item.arab : removeHarakat(item.arab)}
                     </span>
 
-                    {/* Teks Lugot Miring */}
+                    {/* Teks Lugot Jenggotan Miring */}
                     {lugotMode !== 'hide' && (
                       <div
-                        className="absolute top-[85%] right-0 origin-top-right transition-all duration-300 pointer-events-none z-0"
+                        className="absolute top-[50%] right-2 origin-top-right pointer-events-none"
                         style={{ 
-                          transform: 'rotate(-30deg)',
+                          transform: 'rotate(-28deg)',
                           width: '85px'
                         }}
                       >
                         <div 
-                          className="text-[10px] leading-tight text-amber-950 font-medium whitespace-normal break-words bg-[#fffdf9]/90 px-1 py-0.5 rounded font-arabic border border-amber-900/10 shadow-2xs flex flex-col items-start"
+                          className="text-[10px] leading-tight text-amber-950 font-medium whitespace-normal break-words bg-[#fffdf9]/95 px-1 py-0.5 rounded border border-amber-900/5 shadow-3xs flex flex-col items-start text-right"
                           dir={lugotMode === 'pegon' ? 'rtl' : 'ltr'}
                         >
                           {displayLugot}

@@ -11,12 +11,12 @@ const dummyKitab = [
     jumlahKata: 8,
     kataList: [
       { arab: "بِسْمِ", lugot: "kalawan nyebat" },
-      { arab: "اللهِ", lugot: "nu kagungan jenengan Allah" },
+      { arab: "اللهِ", lugot: "jenengan Allah" },
       { arab: "الرَّحْمٰنِ", lugot: "nu Maha Welas" },
       { arab: "الرَّحِيْمِ", lugot: "tur nu Maha Asih" },
       { arab: "اَلْحَمْدُ", lugot: "ari sadaya puji" },
       { arab: "لِلّٰهِ", lugot: "eta kagungan Allah" },
-      { arab: "رَبِّ", lugot: "nu mengeranan" },
+      { arab: "رَبِّ", lugot: "anu mengeranan" },
       { arab: "الْعَالَمِيْنَ", lugot: "sadaya alam" },
     ]
   },
@@ -27,8 +27,8 @@ const dummyKitab = [
     deskripsi: "Rukun-rukun Islam",
     jumlahKata: 3,
     kataList: [
-      { arab: "أَرْكَانُ", lugot: "ari rukun-rukunna" },
-      { arab: "الإِسْلاَمِ", lugot: "agama Islam" },
+      { arab: "أَرْكَانُ", lugot: "ari pirang-pirang rukun" },
+      { arab: "الإِسْلاَمِ", lugot: "Islam" },
       { arab: "خَمْسَةٌ", lugot: "eta aya lima" },
     ]
   }

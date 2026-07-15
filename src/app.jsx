@@ -146,15 +146,10 @@ export default function App() {
               </span>
             </div>
 
-            {/* Layout Al-Qur'an Style: text-justify untuk meratakan sisi kanan dan kiri */}
+            {/* Menggunakan Grid agar sisi kiri dan kanan mepet pas ke garis tepi secara otomatis */}
             <div 
-              className="text-justify py-4" 
+              className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-x-2 gap-y-20 py-4 w-full" 
               dir="rtl"
-              style={{ 
-                textJustify: 'inter-word', 
-                textAlignLast: 'justify',
-                lineHeight: '6.5rem' // Mengunci jarak antar-baris atas-bawah agar pas dengan lugot
-              }}
             >
               {selectedBab.kataList.map((item, index) => {
                 
@@ -164,29 +159,27 @@ export default function App() {
                 if (lugotMode === 'pegon') displayLugot = latinToPegon(item.lugot);
 
                 return (
-                  /* Setiap kata dibungkus inline-block agar mengalir alami mengikuti text-justify */
                   <div 
                     key={index} 
-                    className="inline-block relative min-w-[65px] px-2 mx-1 text-center"
-                    style={{ verticalAlign: 'middle' }}
+                    className="relative flex flex-col items-center justify-center w-full text-center px-0.5"
                   >
                     
-                    {/* Teks Matan Arab (Font diperbesar menjadi text-4xl agar lebih rapat & mantap) */}
-                    <span className="text-4xl font-arabic text-stone-950 block select-all">
+                    {/* Teks Matan Arab Rapat Horizontal & Besar */}
+                    <span className="text-4xl font-arabic text-stone-950 block tracking-tight leading-none">
                       {showHarakat ? item.arab : removeHarakat(item.arab)}
                     </span>
 
-                    {/* Teks Lugot Jenggotan Miring */}
+                    {/* Teks Lugot Miring Sempit */}
                     {lugotMode !== 'hide' && (
                       <div
-                        className="absolute top-[50%] right-2 origin-top-right pointer-events-none"
+                        className="absolute top-[85%] right-1 origin-top-right pointer-events-none z-0"
                         style={{ 
                           transform: 'rotate(-28deg)',
-                          width: '85px'
+                          width: '75px'
                         }}
                       >
                         <div 
-                          className="text-[10px] leading-tight text-amber-950 font-medium whitespace-normal break-words bg-[#fffdf9]/95 px-1 py-0.5 rounded border border-amber-900/5 shadow-3xs flex flex-col items-start text-right"
+                          className="text-[9px] leading-tight text-amber-950 font-medium whitespace-normal break-words bg-[#fffdf9]/95 px-1 py-0.5 rounded border border-amber-900/5 shadow-3xs flex flex-col items-start text-right"
                           dir={lugotMode === 'pegon' ? 'rtl' : 'ltr'}
                         >
                           {displayLugot}

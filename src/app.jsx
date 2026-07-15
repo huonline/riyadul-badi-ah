@@ -20,10 +20,11 @@ export default function App() {
   const openBab = (bab) => {
     setSelectedBab(bab);
     setCurrentView('reader');
+    window.scrollTo(0, 0); // Memastikan selalu mulai dari atas saat ganti bab
   };
 
   return (
-    <div className="min-h-screen bg-[#f7f4ed] text-stone-800 font-sans selection:bg-amber-200">
+    <div className="min-h-screen bg-[#f7f4ed] text-stone-800 font-sans selection:bg-amber-200 relative">
       
       {/* ================================================== */}
       {/* VIEW 1: COVER & DAFTAR ISI (HOME)                  */}
@@ -91,8 +92,9 @@ export default function App() {
       {/* VIEW 2: HALAMAN PEMBACA KITAB (READER)             */}
       {/* ================================================== */}
       {currentView === 'reader' && selectedBab && (
-        <div className="min-h-screen flex flex-col justify-between max-w-3xl mx-auto p-4 md:p-6">
+        <div className="min-h-screen flex flex-col max-w-3xl mx-auto p-4 md:p-6 pb-28">
           
+          {/* Top Bar / Navigation (Hanya tombol kembali dan judul) */}
           <header className="sticky top-2 bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-stone-200 shadow-sm z-20 flex justify-between items-center mb-6">
             <button
               onClick={() => setCurrentView('home')}
@@ -104,32 +106,13 @@ export default function App() {
             <span className="font-bold font-serif text-amber-950 text-sm">
               {selectedBab.judulBab}
             </span>
-
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setShowHarakat(!showHarakat)}
-                className={`text-xs px-2.5 py-1 rounded-md border font-serif transition cursor-pointer ${
-                  showHarakat 
-                    ? 'bg-amber-800 text-white border-amber-800' 
-                    : 'bg-white text-stone-600 border-stone-300'
-                }`}
-              >
-                {showHarakat ? 'شَكْل' : 'سكون'}
-              </button>
-
-              <select
-                value={lugotMode}
-                onChange={(e) => setLugotMode(e.target.value)}
-                className="text-xs bg-white border border-stone-300 rounded-md px-2 py-1 focus:outline-none cursor-pointer"
-              >
-                <option value="pegon">Lugot Pegon</option>
-                <option value="latin">Lugot Latin</option>
-                <option value="hide">Kosongan</option>
-              </select>
-            </div>
+            
+            {/* Ruang kosong untuk menyeimbangkan layout tombol agar judul tetap di tengah */}
+            <div className="w-[70px]"></div>
           </header>
 
-          <main className="bg-[#fffdf9] p-6 md:p-12 rounded-2xl border border-amber-900/10 shadow-sm flex-1 mb-6 flex flex-col justify-between" dir="rtl">
+          {/* Area Lembaran Kitab */}
+          <main className="bg-[#fffdf9] p-6 md:p-12 rounded-2xl border border-amber-900/10 shadow-sm flex-1 flex flex-col" dir="rtl">
             
             <div className="text-center border-b border-dashed border-stone-200 pb-3 mb-8">
               <span className="text-xs tracking-widest text-amber-800 uppercase font-serif">
@@ -142,7 +125,7 @@ export default function App() {
               className="w-full text-justify text-stone-950 font-arabic text-4xl leading-[6.5rem] tracking-tight select-all"
               style={{ 
                 textAlignLast: 'justify',  
-                textJustify: 'auto' // Mengizinkan browser mengatur spasi dan Kasyidah secara natural
+                textJustify: 'auto' 
               }}
             >
               {selectedBab.kataList.map((item, index) => {
@@ -154,7 +137,6 @@ export default function App() {
 
                 return (
                   <React.Fragment key={index}>
-                    {/* Menggunakan INLINE, bukan INLINE-BLOCK */}
                     <span className="relative inline">
                       {kataMatan}
 
@@ -177,20 +159,60 @@ export default function App() {
                         </span>
                       )}
                     </span>
-                    {/* Menambahkan spasi manual antar elemen agar teks bisa terpotong ke baris baru */}
                     {" "}
                   </React.Fragment>
                 );
               })}
             </div>
 
-            <div className="text-center pt-8 border-t border-stone-100 mt-auto">
+            <div className="text-center pt-12 border-t border-stone-100 mt-auto">
               <span className="text-xs text-stone-400 font-mono">
                 Halaman {selectedBab.id}
               </span>
             </div>
 
           </main>
+
+          {/* ================================================== */}
+          {/* BOTTOM APP NAVIGATION BAR (Kontroler Mengambang)   */}
+          {/* ================================================== */}
+          <div className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 pointer-events-none">
+            <div className="max-w-md mx-auto pointer-events-auto bg-white/95 backdrop-blur-md border border-stone-200 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] rounded-2xl p-2 flex justify-between items-center px-3">
+              
+              {/* Tombol Toggle Harakat */}
+              <button
+                onClick={() => setShowHarakat(!showHarakat)}
+                className={`flex-1 text-sm py-2.5 rounded-xl border font-serif transition cursor-pointer text-center font-bold tracking-widest ${
+                  showHarakat 
+                    ? 'bg-amber-800 text-white border-amber-800 shadow-md' 
+                    : 'bg-stone-50 text-stone-600 border-stone-200 hover:bg-stone-100'
+                }`}
+              >
+                {showHarakat ? 'شَكْل' : 'سكون'}
+              </button>
+
+              <div className="w-px h-8 bg-stone-200 mx-3"></div>
+
+              {/* Pemilih Mode Lugot */}
+              <div className="flex-1 relative">
+                <select
+                  value={lugotMode}
+                  onChange={(e) => setLugotMode(e.target.value)}
+                  className="w-full bg-stone-50 border border-stone-200 rounded-xl px-2 py-2.5 text-sm text-center font-semibold text-stone-700 focus:outline-none focus:ring-2 focus:ring-amber-700/50 cursor-pointer appearance-none"
+                >
+                  <option value="pegon">Lugot Pegon</option>
+                  <option value="latin">Lugot Latin</option>
+                  <option value="hide">Kosongan</option>
+                </select>
+                {/* Custom Panah Select agar lebih rapi */}
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-stone-400 text-xs">
+                  ▼
+                </div>
+              </div>
+
+            </div>
+          </div>
+
         </div>
       )}
 

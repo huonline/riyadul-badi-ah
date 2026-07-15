@@ -2,6 +2,34 @@ import React, { useState } from 'react';
 import { dummyKitab } from './dataRiyad.js';
 import { latinToPegon, removeHarakat } from './utils/transliterasi';
 
+function splitLugot(text) {
+  const words = text.trim().split(/\s+/).filter(Boolean);
+
+  // Pendek = 1 baris
+  if (words.length <= 3) {
+    return [text];
+  }
+
+  // Sedang = 2 baris
+  if (words.length <= 6) {
+    const middle = Math.ceil(words.length / 2);
+    return [
+      words.slice(0, middle).join(' '),
+      words.slice(middle).join(' '),
+    ];
+  }
+
+  // Panjang = 3 baris
+  const perLine = Math.ceil(words.length / 3);
+  const result = [];
+
+  for (let i = 0; i < words.length; i += perLine) {
+    result.push(words.slice(i, i + perLine).join(' '));
+  }
+
+  return result;
+}
+
 export default function App() {
   const [currentView, setCurrentView] = useState('home'); // 'home' | 'reader'
   const [selectedBab, setSelectedBab] = useState(null);
@@ -12,7 +40,7 @@ export default function App() {
   const [lugotMode, setLugotMode] = useState('pegon'); // 'hide' | 'latin' | 'pegon'
 
   // Filter Bab berdasarkan pencarian
-  const filteredBab = dummyKitab.filter(bab => 
+  const filteredBab = dummyKitab.filter(bab =>
     bab.judulBab.toLowerCase().includes(searchQuery.toLowerCase()) ||
     bab.deskripsi.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -25,20 +53,20 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#f7f4ed] text-stone-800 font-sans selection:bg-amber-200 relative">
-      
+
       {/* ================================================== */}
       {/* VIEW 1: COVER & DAFTAR ISI (HOME)                  */}
       {/* ================================================== */}
       {currentView === 'home' && (
         <div className="max-w-2xl mx-auto p-4 md:p-6 pb-20">
-          
+
           <header className="bg-amber-900 text-amber-50 rounded-2xl p-6 mb-6 shadow-md relative overflow-hidden">
             <div className="relative z-10">
               <span className="text-xs uppercase tracking-widest text-amber-300 font-semibold">Kitab Digital</span>
               <h1 className="text-3xl font-serif font-bold mt-1 mb-2">Riyadul Badi'ah</h1>
               <p className="text-sm text-amber-200/90 italic">Matan Arab & Lugot Jenggotan Rata Sisi</p>
-              
-              <button 
+
+              <button
                 onClick={() => openBab(dummyKitab[0])}
                 className="mt-5 px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-stone-950 font-semibold rounded-xl text-sm shadow transition flex items-center gap-2 cursor-pointer"
               >
@@ -62,7 +90,7 @@ export default function App() {
 
           <div className="space-y-3">
             <h2 className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2 px-1">Daftar Bab</h2>
-            
+
             {filteredBab.map((bab) => (
               <div
                 key={bab.id}
@@ -93,9 +121,9 @@ export default function App() {
       {/* ================================================== */}
       {currentView === 'reader' && selectedBab && (
         <div className="min-h-screen flex flex-col max-w-3xl mx-auto p-4 md:p-6 pb-28">
-          
+
           <main className="bg-[#fffdf9] p-6 md:p-12 rounded-2xl border border-amber-900/10 shadow-sm flex-1 flex flex-col mt-2" dir="rtl">
-            
+
             <div className="text-center border-b border-dashed border-stone-200 pb-3 mb-8">
               <span className="text-xs tracking-widest text-amber-800 uppercase font-serif">
                 — {selectedBab.judulBab} —
@@ -103,71 +131,77 @@ export default function App() {
             </div>
 
             <div
-  className="
-  w-full
-  text-justify
-  text-stone-950
-  font-arabic
-  text-4xl
-  leading-[6rem]
-  tracking-tight
-  select-all
-  "
-  style={{
-    textAlignLast: 'justify',
-    textJustify: 'distribute'
-  }}
->
+              className="
+                w-full
+                text-justify
+                text-stone-950
+                font-arabic
+                text-4xl
+                leading-[6rem]
+                tracking-tight
+                select-all
+              "
+              style={{
+                textAlignLast: 'justify',
+                textJustify: 'distribute',
+              }}
+            >
               {selectedBab.kataList.map((item, index) => {
                 const kataMatan = showHarakat ? item.arab : removeHarakat(item.arab);
-                
+
                 let displayLugot = '';
                 if (lugotMode === 'latin') displayLugot = item.lugot;
                 if (lugotMode === 'pegon') displayLugot = latinToPegon(item.lugot);
 
+                const lugotLines = splitLugot(displayLugot);
+
                 return (
                   <React.Fragment key={index}>
-                    <span className="relative inline">
+                    <span className="relative inline-block">
                       {/* Teks Arab Matan diamankan di z-10 agar selalu di atas */}
                       <span className="relative z-10">{kataMatan}</span>
 
                       {/* AREA LUGOT */}
-{lugotMode !== 'hide' && (
-  <span
-    className="absolute pointer-events-none z-0"
-    style={{
-      top: '38px',
-      right: '0',
-      transform: 'rotate(-28deg)',
-      transformOrigin: 'top right',
-      minWidth: '35px',
-      maxWidth: '80px',
-      direction: lugotMode === 'pegon' ? 'rtl' : 'ltr',
-      textAlign: 'right',
-      lineHeight: '0.95rem'
-    }}
-  >
-    <span
-      className="
-      inline-block
-      text-[10px]
-      leading-[0.95rem]
-      font-semibold
-      whitespace-normal
-      break-words
-      text-amber-950
-      "
-      style={{
-        textAlign:
-          lugotMode === 'pegon'
-            ? 'right'
-            : 'left'
-      }}
-    >
-      {displayLugot}
-    </span>
-  </span>
-)}
+                      {lugotMode !== 'hide' && (
+                        <span
+                          className="absolute pointer-events-none z-0"
+                          style={{
+                            top: '38px',
+                            right: '0',
+                            transform: 'rotate(-28deg)',
+                            transformOrigin: 'top right',
+                            minWidth: '40px',
+                            maxWidth: '95px',
+                            direction: lugotMode === 'pegon' ? 'rtl' : 'ltr',
+                            lineHeight: '0.9rem',
+                          }}
+                        >
+                          <span
+                            className="
+                              inline-block
+                              text-[10px]
+                              leading-[0.9rem]
+                              font-semibold
+                              text-amber-950
+                              whitespace-normal
+                            "
+                          >
+                            {lugotLines.map((line, i) => (
+                              <span
+                                key={i}
+                                style={{
+                                  display: 'block',
+                                  marginRight: `${i * 5}px`,
+                                  marginTop: '-1px',
+                                  textAlign: lugotMode === 'pegon' ? 'right' : 'left',
+                                }}
+                              >
+                                {line}
+                              </span>
+                            ))}
+                          </span>
+                        </span>
+                      )}
                     </span>
                     {" "}
                   </React.Fragment>
@@ -188,7 +222,7 @@ export default function App() {
           {/* ================================================== */}
           <div className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 pointer-events-none">
             <div className="max-w-md mx-auto pointer-events-auto bg-white/95 backdrop-blur-md border border-stone-200 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] rounded-2xl p-2 flex justify-between items-center px-2 gap-1.5">
-              
+
               <button
                 onClick={() => setCurrentView('home')}
                 className="px-4 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl transition cursor-pointer font-bold text-lg flex items-center justify-center"
@@ -202,8 +236,8 @@ export default function App() {
               <button
                 onClick={() => setShowHarakat(!showHarakat)}
                 className={`flex-1 text-sm py-2.5 rounded-xl border font-serif transition cursor-pointer text-center font-bold tracking-widest ${
-                  showHarakat 
-                    ? 'bg-amber-800 text-white border-amber-800 shadow-md' 
+                  showHarakat
+                    ? 'bg-amber-800 text-white border-amber-800 shadow-md'
                     : 'bg-stone-50 text-stone-600 border-stone-200 hover:bg-stone-100'
                 }`}
               >

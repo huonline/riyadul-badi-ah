@@ -94,7 +94,6 @@ export default function App() {
       {currentView === 'reader' && selectedBab && (
         <div className="min-h-screen flex flex-col max-w-3xl mx-auto p-4 md:p-6 pb-28">
           
-          {/* Area Lembaran Kitab Utama */}
           <main className="bg-[#fffdf9] p-6 md:p-12 rounded-2xl border border-amber-900/10 shadow-sm flex-1 flex flex-col mt-2" dir="rtl">
             
             <div className="text-center border-b border-dashed border-stone-200 pb-3 mb-8">
@@ -103,7 +102,6 @@ export default function App() {
               </span>
             </div>
 
-            {/* AREA MATAN ARAB: Rata Kanan-Kiri Presisi */}
             <div 
               className="w-full text-justify text-stone-950 font-arabic text-4xl leading-[6.5rem] tracking-tight select-all"
               style={{ 
@@ -118,26 +116,33 @@ export default function App() {
                 if (lugotMode === 'latin') displayLugot = item.lugot;
                 if (lugotMode === 'pegon') displayLugot = latinToPegon(item.lugot);
 
+                // Penentu dinamis aliran teks
+                const isRTL = lugotMode === 'pegon';
+
                 return (
                   <React.Fragment key={index}>
                     <span className="relative inline">
-                      {kataMatan}
+                      {/* Teks Arab Matan diamankan di z-10 agar selalu di atas */}
+                      <span className="relative z-10">{kataMatan}</span>
 
-                      {/* AREA LUGOT: Diperbaiki total dari kebocoran CSS */}
+                      {/* AREA LUGOT */}
                       {lugotMode !== 'hide' && (
                         <span
-                          className="absolute top-[85%] right-0 pointer-events-none z-0"
+                          className="absolute pointer-events-none z-0"
                           style={{ 
-                            transform: 'rotate(-28deg)',
-                            width: '85px', // Lebar sedikit ditambah agar tidak terlalu sempit
-                            transformOrigin: 'top right',
-                            textAlignLast: 'auto', // RESET CSS JUGGERNAUT (Penting!)
-                            textJustify: 'auto'    // RESET CSS JUGGERNAUT (Penting!)
+                            top: '48px', // Posisi dikunci pakai Pixel (px) agar tidak memanjat ke atas
+                            right: isRTL ? '0' : 'auto', // Pegon nempel di kanan
+                            left: !isRTL ? '0' : 'auto', // Latin nempel di kiri
+                            transform: isRTL ? 'rotate(-28deg)' : 'rotate(28deg)', // Rotasi dinamis ↙ dan ↘
+                            transformOrigin: isRTL ? 'top right' : 'top left',
+                            width: '85px',
+                            textAlignLast: 'auto', 
+                            textJustify: 'auto'    
                           }}
-                          dir={lugotMode === 'pegon' ? 'rtl' : 'ltr'}
+                          dir={isRTL ? 'rtl' : 'ltr'}
                         >
                           <span 
-                            className={`inline-block text-[10px] leading-tight text-amber-900/90 font-medium whitespace-normal break-words bg-[#fffdf9]/70 px-0.5 rounded ${lugotMode === 'pegon' ? 'text-right' : 'text-left'}`}
+                            className={`block text-[10px] leading-[1.15rem] text-amber-950 font-semibold whitespace-normal break-words bg-[#fffdf9]/95 px-1 py-0.5 rounded shadow-sm border border-stone-200/50 ${isRTL ? 'text-right' : 'text-left'}`}
                           >
                             {displayLugot}
                           </span>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { dummyKitab } from './dataRiyad.js';
-import { removeHarakat } from './utils/transliterasi';
+import { latinToPegon, removeHarakat } from './utils/transliterasi';
 
 export default function App() {
   const [currentView, setCurrentView] = useState('home'); // 'home' | 'reader'
@@ -9,6 +9,7 @@ export default function App() {
 
   // Setting Mode Pembaca
   const [showHarakat, setShowHarakat] = useState(true);
+  const [lugotMode, setLugotMode] = useState('pegon'); // 'hide' | 'latin' | 'pegon'
 
   // Filter Bab berdasarkan pencarian
   const filteredBab = dummyKitab.filter(bab => 
@@ -35,7 +36,7 @@ export default function App() {
             <div className="relative z-10">
               <span className="text-xs uppercase tracking-widest text-amber-300 font-semibold">Kitab Digital</span>
               <h1 className="text-3xl font-serif font-bold mt-1 mb-2">Riyadul Badi'ah</h1>
-              <p className="text-sm text-amber-200/90 italic">Matan Arab Only - Model Mushaf Rapat</p>
+              <p className="text-sm text-amber-200/90 italic">Matan Arab & Lugot Jenggotan Rata Sisi</p>
               
               <button 
                 onClick={() => openBab(dummyKitab[0])}
@@ -109,17 +110,29 @@ export default function App() {
               {selectedBab.judulBab}
             </span>
 
-            {/* Controller Toggle Harakat */}
-            <button
-              onClick={() => setShowHarakat(!showHarakat)}
-              className={`text-xs px-2.5 py-1 rounded-md border font-serif transition cursor-pointer ${
-                showHarakat 
-                  ? 'bg-amber-800 text-white border-amber-800' 
-                  : 'bg-white text-stone-600 border-stone-300'
-              }`}
-            >
-              {showHarakat ? 'شَكْل' : 'سكون'}
-            </button>
+            {/* Controller Toggles */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowHarakat(!showHarakat)}
+                className={`text-xs px-2.5 py-1 rounded-md border font-serif transition cursor-pointer ${
+                  showHarakat 
+                    ? 'bg-amber-800 text-white border-amber-800' 
+                    : 'bg-white text-stone-600 border-stone-300'
+                }`}
+              >
+                {showHarakat ? 'شَكْل' : 'سكون'}
+              </button>
+
+              <select
+                value={lugotMode}
+                onChange={(e) => setLugotMode(e.target.value)}
+                className="text-xs bg-white border border-stone-300 rounded-md px-2 py-1 focus:outline-none cursor-pointer"
+              >
+                <option value="pegon">Lugot Pegon</option>
+                <option value="latin">Lugot Latin</option>
+                <option value="hide">Kosongan</option>
+              </select>
+            </div>
           </header>
 
           {/* Area Lembaran Kitab */}
@@ -131,23 +144,48 @@ export default function App() {
               </span>
             </div>
 
-            {/* FOKUS REVISI: Efek Kasyidah Tulisan Arab Rata & Mepet Sisi Kiri-Kanan */}
+            {/* AREA UTAMA: Rata Kanan Kiri dengan Distribusi Kasyidah Arab */}
             <div 
-              className="w-full text-justify text-stone-950 font-arabic text-4xl leading-[5rem] tracking-tight block select-all"
+              className="w-full text-justify text-stone-950 font-arabic text-4xl leading-[6.5rem] tracking-tight block select-all"
               style={{ 
-                textJustify: 'distribute', // Memaksa perataan berbasis kasyidah/distribusi tulisan Arab
-                textAlignLast: 'justify',  // Memaksa baris terakhir paragraf ikut rata kanan-kiri
-                wordBreak: 'keep-all'      // Mencegah kata Arab terpotong di tengah huruf
+                textJustify: 'distribute', 
+                textAlignLast: 'justify',  
+                wordBreak: 'keep-all'      
               }}
             >
               {selectedBab.kataList.map((item, index) => {
-                const kataMatan = showHarakat ? item.arab : removeHarakat(item.arab);
+                const kataMatan = showHarakat ? item.arab : removeHaceted(item.arab);
+                
+                // Konversi teks lugot sesuai pilihan user
+                let displayLugot = '';
+                if (lugotMode === 'latin') displayLugot = item.lugot;
+                if (lugotMode === 'pegon') displayLugot = latinToPegon(item.lugot);
+
                 return (
                   <span 
                     key={index} 
-                    className="inline mx-[0.15rem] whitespace-nowrap"
+                    className="inline-block relative mx-[0.25rem] whitespace-nowrap"
                   >
-                    {kataMatan}
+                    {/* Tulisan Matan Utama */}
+                    <span className="relative z-10">{kataMatan}</span>
+
+                    {/* Tulisan Lugot Jenggotan Menggantung di Bawah Kata */}
+                    {lugotMode !== 'hide' && (
+                      <span
+                        className="absolute top-[55%] right-1 origin-top-right pointer-events-none z-0"
+                        style={{ 
+                          transform: 'rotate(-28deg)',
+                          width: '75px'
+                        }}
+                      >
+                        <span 
+                          className="text-[9px] leading-tight text-amber-900/90 font-medium whitespace-normal break-words bg-[#fffdf9]/90 px-0.5 rounded shadow-3xs flex flex-col items-start text-right"
+                          dir={lugotMode === 'pegon' ? 'rtl' : 'ltr'}
+                        >
+                          {displayLugot}
+                        </span>
+                      </span>
+                    )}
                   </span>
                 );
               })}

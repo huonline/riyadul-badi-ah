@@ -94,25 +94,10 @@ export default function App() {
       {currentView === 'reader' && selectedBab && (
         <div className="min-h-screen flex flex-col max-w-3xl mx-auto p-4 md:p-6 pb-28">
           
-          {/* Top Bar / Navigation (Hanya tombol kembali dan judul) */}
-          <header className="sticky top-2 bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-stone-200 shadow-sm z-20 flex justify-between items-center mb-6">
-            <button
-              onClick={() => setCurrentView('home')}
-              className="text-xs font-semibold px-3 py-1.5 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-lg transition cursor-pointer"
-            >
-              ← Kembali
-            </button>
+          {/* HEADER ATAS DIHAPUS AGAR FULL IMMERSIVE MODE */}
 
-            <span className="font-bold font-serif text-amber-950 text-sm">
-              {selectedBab.judulBab}
-            </span>
-            
-            {/* Ruang kosong untuk menyeimbangkan layout tombol agar judul tetap di tengah */}
-            <div className="w-[70px]"></div>
-          </header>
-
-          {/* Area Lembaran Kitab */}
-          <main className="bg-[#fffdf9] p-6 md:p-12 rounded-2xl border border-amber-900/10 shadow-sm flex-1 flex flex-col" dir="rtl">
+          {/* Area Lembaran Kitab Utama */}
+          <main className="bg-[#fffdf9] p-6 md:p-12 rounded-2xl border border-amber-900/10 shadow-sm flex-1 flex flex-col mt-2" dir="rtl">
             
             <div className="text-center border-b border-dashed border-stone-200 pb-3 mb-8">
               <span className="text-xs tracking-widest text-amber-800 uppercase font-serif">
@@ -120,7 +105,7 @@ export default function App() {
               </span>
             </div>
 
-            {/* AREA UTAMA: Menggunakan inline murni agar fungsi Justify browser bekerja sempurna */}
+            {/* AREA MATAN ARAB */}
             <div 
               className="w-full text-justify text-stone-950 font-arabic text-4xl leading-[6.5rem] tracking-tight select-all"
               style={{ 
@@ -174,12 +159,23 @@ export default function App() {
           </main>
 
           {/* ================================================== */}
-          {/* BOTTOM APP NAVIGATION BAR (Kontroler Mengambang)   */}
+          {/* BOTTOM APP NAVIGATION BAR (3 Tombol Navigasi)      */}
           {/* ================================================== */}
           <div className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 pointer-events-none">
-            <div className="max-w-md mx-auto pointer-events-auto bg-white/95 backdrop-blur-md border border-stone-200 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] rounded-2xl p-2 flex justify-between items-center px-3">
+            <div className="max-w-md mx-auto pointer-events-auto bg-white/95 backdrop-blur-md border border-stone-200 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] rounded-2xl p-2 flex justify-between items-center px-2 gap-1.5">
               
-              {/* Tombol Toggle Harakat */}
+              {/* 1. Tombol Kembali (Berbentuk Icon agar ringkas di HP) */}
+              <button
+                onClick={() => setCurrentView('home')}
+                className="px-4 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl transition cursor-pointer font-bold text-lg flex items-center justify-center"
+                title="Kembali ke Daftar Isi"
+              >
+                ←
+              </button>
+
+              <div className="w-px h-8 bg-stone-200 mx-1"></div>
+
+              {/* 2. Tombol Toggle Harakat */}
               <button
                 onClick={() => setShowHarakat(!showHarakat)}
                 className={`flex-1 text-sm py-2.5 rounded-xl border font-serif transition cursor-pointer text-center font-bold tracking-widest ${
@@ -191,21 +187,21 @@ export default function App() {
                 {showHarakat ? 'شَكْل' : 'سكون'}
               </button>
 
-              <div className="w-px h-8 bg-stone-200 mx-3"></div>
+              <div className="w-px h-8 bg-stone-200 mx-1"></div>
 
-              {/* Pemilih Mode Lugot */}
+              {/* 3. Pemilih Mode Lugot */}
               <div className="flex-1 relative">
                 <select
                   value={lugotMode}
                   onChange={(e) => setLugotMode(e.target.value)}
                   className="w-full bg-stone-50 border border-stone-200 rounded-xl px-2 py-2.5 text-sm text-center font-semibold text-stone-700 focus:outline-none focus:ring-2 focus:ring-amber-700/50 cursor-pointer appearance-none"
                 >
-                  <option value="pegon">Lugot Pegon</option>
-                  <option value="latin">Lugot Latin</option>
+                  <option value="pegon">Pegon</option>
+                  <option value="latin">Latin</option>
                   <option value="hide">Kosongan</option>
                 </select>
                 {/* Custom Panah Select agar lebih rapi */}
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-stone-400 text-xs">
+                <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-stone-400 text-xs">
                   ▼
                 </div>
               </div>

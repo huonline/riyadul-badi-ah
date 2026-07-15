@@ -94,8 +94,6 @@ export default function App() {
       {currentView === 'reader' && selectedBab && (
         <div className="min-h-screen flex flex-col max-w-3xl mx-auto p-4 md:p-6 pb-28">
           
-          {/* HEADER ATAS DIHAPUS AGAR FULL IMMERSIVE MODE */}
-
           {/* Area Lembaran Kitab Utama */}
           <main className="bg-[#fffdf9] p-6 md:p-12 rounded-2xl border border-amber-900/10 shadow-sm flex-1 flex flex-col mt-2" dir="rtl">
             
@@ -105,12 +103,12 @@ export default function App() {
               </span>
             </div>
 
-            {/* AREA MATAN ARAB */}
+            {/* AREA MATAN ARAB: Rata Kanan-Kiri Presisi (Blok Sempurna) */}
             <div 
               className="w-full text-justify text-stone-950 font-arabic text-4xl leading-[6.5rem] tracking-tight select-all"
               style={{ 
                 textAlignLast: 'justify',  
-                textJustify: 'auto' 
+                textJustify: 'distribute' // Memaksa perataan berbasis kasyidah/distribusi tulisan Arab
               }}
             >
               {selectedBab.kataList.map((item, index) => {
@@ -125,7 +123,7 @@ export default function App() {
                     <span className="relative inline">
                       {kataMatan}
 
-                      {/* Lugot diletakkan absolut ke elemen span inline */}
+                      {/* AREA FOKUS PERBAIKAN: Lugot Jenggotan Miring */}
                       {lugotMode !== 'hide' && (
                         <span
                           className="absolute top-[85%] right-0 pointer-events-none z-0"
@@ -135,8 +133,13 @@ export default function App() {
                             transformOrigin: 'top right'
                           }}
                         >
+                          {/* 
+                            PERBAIKAN: Menyederhanakan span lugot. Hapus Flexbox. 
+                            Kita gunakan `block` murni dengan `text-right` pada konteks RTL (Mode Pegon) 
+                            agar browser natural meletakkan awal baris baru di kanan, sehingga aliran teks melebar ke kiri.
+                          */}
                           <span 
-                            className="text-[9px] leading-tight text-amber-900/90 font-medium whitespace-normal break-words bg-[#fffdf9]/70 px-0.5 rounded flex flex-col items-start text-right"
+                            className={`block text-[9px] leading-tight text-amber-900/90 font-medium whitespace-normal break-words bg-[#fffdf9]/70 px-0.5 rounded flex flex-col text-amber-900/90 ${lugotMode === 'pegon' ? 'text-right' : 'text-left'}`}
                             dir={lugotMode === 'pegon' ? 'rtl' : 'ltr'}
                           >
                             {displayLugot}
@@ -159,12 +162,12 @@ export default function App() {
           </main>
 
           {/* ================================================== */}
-          {/* BOTTOM APP NAVIGATION BAR (3 Tombol Navigasi)      */}
+          {/* BOTTOM APP NAVIGATION BAR (Tombol Kontrol di Bawah) */}
           {/* ================================================== */}
           <div className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 pointer-events-none">
             <div className="max-w-md mx-auto pointer-events-auto bg-white/95 backdrop-blur-md border border-stone-200 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] rounded-2xl p-2 flex justify-between items-center px-2 gap-1.5">
               
-              {/* 1. Tombol Kembali (Berbentuk Icon agar ringkas di HP) */}
+              {/* Tombol Kembali (Icon ringkas agar irit space) */}
               <button
                 onClick={() => setCurrentView('home')}
                 className="px-4 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl transition cursor-pointer font-bold text-lg flex items-center justify-center"
@@ -175,7 +178,7 @@ export default function App() {
 
               <div className="w-px h-8 bg-stone-200 mx-1"></div>
 
-              {/* 2. Tombol Toggle Harakat */}
+              {/* Tombol Toggle Harakat */}
               <button
                 onClick={() => setShowHarakat(!showHarakat)}
                 className={`flex-1 text-sm py-2.5 rounded-xl border font-serif transition cursor-pointer text-center font-bold tracking-widest ${
@@ -189,7 +192,7 @@ export default function App() {
 
               <div className="w-px h-8 bg-stone-200 mx-1"></div>
 
-              {/* 3. Pemilih Mode Lugot */}
+              {/* Pemilih Mode Lugot */}
               <div className="flex-1 relative">
                 <select
                   value={lugotMode}

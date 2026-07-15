@@ -1,33 +1,28 @@
-import React, { useState } from 'react';
+                  import React, { useState } from 'react';
 import { dummyKitab } from './dataRiyad.js';
 import { latinToPegon, removeHarakat } from './utils/transliterasi';
 
-function splitLugot(text) {
+function splitLugot(text, maxChars = 18) {
   const words = text.trim().split(/\s+/).filter(Boolean);
+  if (words.length === 0) return [''];
 
-  // Pendek = 1 baris
-  if (words.length <= 3) {
-    return [text];
+  const lines = [];
+  let current = '';
+
+  for (const word of words) {
+    const candidate = current ? `${current} ${word}` : word;
+
+    if (candidate.length <= maxChars) {
+      current = candidate;
+    } else {
+      if (current) lines.push(current);
+      current = word;
+    }
   }
 
-  // Sedang = 2 baris
-  if (words.length <= 6) {
-    const middle = Math.ceil(words.length / 2);
-    return [
-      words.slice(0, middle).join(' '),
-      words.slice(middle).join(' '),
-    ];
-  }
+  if (current) lines.push(current);
 
-  // Panjang = 3 baris
-  const perLine = Math.ceil(words.length / 3);
-  const result = [];
-
-  for (let i = 0; i < words.length; i += perLine) {
-    result.push(words.slice(i, i + perLine).join(' '));
-  }
-
-  return result;
+  return lines;
 }
 
 export default function App() {
@@ -40,9 +35,10 @@ export default function App() {
   const [lugotMode, setLugotMode] = useState('pegon'); // 'hide' | 'latin' | 'pegon'
 
   // Filter Bab berdasarkan pencarian
-  const filteredBab = dummyKitab.filter(bab =>
-    bab.judulBab.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    bab.deskripsi.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredBab = dummyKitab.filter(
+    (bab) =>
+      bab.judulBab.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      bab.deskripsi.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const openBab = (bab) => {
@@ -53,18 +49,22 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#f7f4ed] text-stone-800 font-sans selection:bg-amber-200 relative">
-
       {/* ================================================== */}
       {/* VIEW 1: COVER & DAFTAR ISI (HOME)                  */}
       {/* ================================================== */}
       {currentView === 'home' && (
         <div className="max-w-2xl mx-auto p-4 md:p-6 pb-20">
-
           <header className="bg-amber-900 text-amber-50 rounded-2xl p-6 mb-6 shadow-md relative overflow-hidden">
             <div className="relative z-10">
-              <span className="text-xs uppercase tracking-widest text-amber-300 font-semibold">Kitab Digital</span>
-              <h1 className="text-3xl font-serif font-bold mt-1 mb-2">Riyadul Badi'ah</h1>
-              <p className="text-sm text-amber-200/90 italic">Matan Arab & Lugot Jenggotan Rata Sisi</p>
+              <span className="text-xs uppercase tracking-widest text-amber-300 font-semibold">
+                Kitab Digital
+              </span>
+              <h1 className="text-3xl font-serif font-bold mt-1 mb-2">
+                Riyadul Badi'ah
+              </h1>
+              <p className="text-sm text-amber-200/90 italic">
+                Matan Arab & Lugot Jenggotan Rata Sisi
+              </p>
 
               <button
                 onClick={() => openBab(dummyKitab[0])}
@@ -89,7 +89,9 @@ export default function App() {
           </div>
 
           <div className="space-y-3">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2 px-1">Daftar Bab</h2>
+            <h2 className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2 px-1">
+              Daftar Bab
+            </h2>
 
             {filteredBab.map((bab) => (
               <div
@@ -102,7 +104,9 @@ export default function App() {
                     {bab.noBab}
                   </div>
                   <div>
-                    <h3 className="font-bold text-stone-900 group-hover:text-amber-900 transition">{bab.judulBab}</h3>
+                    <h3 className="font-bold text-stone-900 group-hover:text-amber-900 transition">
+                      {bab.judulBab}
+                    </h3>
                     <p className="text-xs text-stone-500">{bab.deskripsi}</p>
                   </div>
                 </div>
@@ -112,7 +116,6 @@ export default function App() {
               </div>
             ))}
           </div>
-
         </div>
       )}
 
@@ -121,9 +124,10 @@ export default function App() {
       {/* ================================================== */}
       {currentView === 'reader' && selectedBab && (
         <div className="min-h-screen flex flex-col max-w-3xl mx-auto p-4 md:p-6 pb-28">
-
-          <main className="bg-[#fffdf9] p-6 md:p-12 rounded-2xl border border-amber-900/10 shadow-sm flex-1 flex flex-col mt-2" dir="rtl">
-
+          <main
+            className="bg-[#fffdf9] p-6 md:p-12 rounded-2xl border border-amber-900/10 shadow-sm flex-1 flex flex-col mt-2"
+            dir="rtl"
+          >
             <div className="text-center border-b border-dashed border-stone-200 pb-3 mb-8">
               <span className="text-xs tracking-widest text-amber-800 uppercase font-serif">
                 — {selectedBab.judulBab} —
@@ -153,12 +157,11 @@ export default function App() {
                 if (lugotMode === 'latin') displayLugot = item.lugot;
                 if (lugotMode === 'pegon') displayLugot = latinToPegon(item.lugot);
 
-                const lugotLines = splitLugot(displayLugot);
+                const lugotLines = splitLugot(displayLugot, 18);
 
                 return (
                   <React.Fragment key={index}>
                     <span className="relative inline-block">
-                      {/* Teks Arab Matan diamankan di z-10 agar selalu di atas */}
                       <span className="relative z-10">{kataMatan}</span>
 
                       {/* AREA LUGOT */}
@@ -171,7 +174,7 @@ export default function App() {
                             transform: 'rotate(-28deg)',
                             transformOrigin: 'top right',
                             minWidth: '40px',
-                            maxWidth: '95px',
+                            maxWidth: '110px',
                             direction: lugotMode === 'pegon' ? 'rtl' : 'ltr',
                             lineHeight: '0.9rem',
                           }}
@@ -191,7 +194,7 @@ export default function App() {
                                 key={i}
                                 style={{
                                   display: 'block',
-                                  marginRight: `${i * 5}px`,
+                                  marginRight: `${i * 6}px`,
                                   marginTop: '-1px',
                                   textAlign: lugotMode === 'pegon' ? 'right' : 'left',
                                 }}
@@ -214,7 +217,6 @@ export default function App() {
                 Halaman {selectedBab.id}
               </span>
             </div>
-
           </main>
 
           {/* ================================================== */}
@@ -222,7 +224,6 @@ export default function App() {
           {/* ================================================== */}
           <div className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 pointer-events-none">
             <div className="max-w-md mx-auto pointer-events-auto bg-white/95 backdrop-blur-md border border-stone-200 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] rounded-2xl p-2 flex justify-between items-center px-2 gap-1.5">
-
               <button
                 onClick={() => setCurrentView('home')}
                 className="px-4 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl transition cursor-pointer font-bold text-lg flex items-center justify-center"
@@ -260,13 +261,10 @@ export default function App() {
                   ▼
                 </div>
               </div>
-
             </div>
           </div>
-
         </div>
       )}
-
     </div>
   );
 }

@@ -116,33 +116,31 @@ export default function App() {
                 if (lugotMode === 'latin') displayLugot = item.lugot;
                 if (lugotMode === 'pegon') displayLugot = latinToPegon(item.lugot);
 
-                // Penentu dinamis aliran teks
-                const isRTL = lugotMode === 'pegon';
-
                 return (
                   <React.Fragment key={index}>
                     <span className="relative inline">
                       {/* Teks Arab Matan diamankan di z-10 agar selalu di atas */}
                       <span className="relative z-10">{kataMatan}</span>
 
-                      {/* AREA LUGOT */}
+                      {/* AREA LUGOT: Diperbaiki agar putaran selalu sama, tapi bungkus baris sesuai jenis bahasanya */}
                       {lugotMode !== 'hide' && (
                         <span
                           className="absolute pointer-events-none z-0"
                           style={{ 
-                            top: '48px', // Posisi dikunci pakai Pixel (px) agar tidak memanjat ke atas
-                            right: isRTL ? '0' : 'auto', // Pegon nempel di kanan
-                            left: !isRTL ? '0' : 'auto', // Latin nempel di kiri
-                            transform: isRTL ? 'rotate(-28deg)' : 'rotate(28deg)', // Rotasi dinamis ↙ dan ↘
-                            transformOrigin: isRTL ? 'top right' : 'top left',
-                            width: '85px',
+                            top: '48px',
+                            right: '0',
+                            transform: 'rotate(-28deg)', // Miring SELALU kanan ke kiri untuk semua mode
+                            transformOrigin: 'top right',
+                            width: '90px', // Lebar ruang lugot
+                            textAlign: 'right', // Memaksa kotak selalu menempel ke kanan (pangkal huruf Arab)
                             textAlignLast: 'auto', 
-                            textJustify: 'auto'    
+                            textJustify: 'auto',
+                            direction: lugotMode === 'pegon' ? 'rtl' : 'ltr' // Kunci arah pemotongan baris baru
                           }}
-                          dir={isRTL ? 'rtl' : 'ltr'}
                         >
                           <span 
-                            className={`block text-[10px] leading-[1.15rem] text-amber-950 font-semibold whitespace-normal break-words bg-[#fffdf9]/95 px-1 py-0.5 rounded shadow-sm border border-stone-200/50 ${isRTL ? 'text-right' : 'text-left'}`}
+                            className="inline-block text-[10px] leading-[1.2rem] text-amber-950 font-semibold whitespace-normal break-words bg-[#fffdf9]/95 px-1 py-0.5 rounded shadow-sm border border-stone-200/50"
+                            style={{ textAlign: lugotMode === 'pegon' ? 'right' : 'left' }}
                           >
                             {displayLugot}
                           </span>

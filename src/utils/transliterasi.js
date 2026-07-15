@@ -13,8 +13,11 @@ export function latinToPegon(text) {
     let kataProses = kata;
 
     // 1. Ubah vokal khusus di AWAL KATA dahulu (Bunyi Mandiri)
-    if (kataProses.startsWith('i')) {
-      kataProses = 'إي' + kataProses.slice(1); // Contoh: itu -> إيتو, asih -> أْسِيهْ (jika i di awal)
+    if (kataProses.startsWith('ieu')) {
+      kataProses = 'إيُّو' + kataProses.slice(3);
+    } else if (kataProses.startsWith('i') || kataProses.startsWith('e')) {
+      // Sekarang 'eta' atau 'itu' otomatis diawali hamzah dan ya (إي)
+      kataProses = 'إy' + kataProses.slice(1); 
     } else if (kataProses.startsWith('u') || kataProses.startsWith('o')) {
       kataProses = 'أو' + kataProses.slice(1);
     } else if (kataProses.startsWith('a')) {
@@ -41,7 +44,7 @@ export function latinToPegon(text) {
       'a': 'ا',
       'i': 'ي',
       'u': 'و',
-      'e': 'ي', // Bunyi e memakai Ya sesudah hurufnya (seperti je-ne-ngan)
+      'e': 'ي', // Bunyi e di tengah memakai Ya sesudah hurufnya (seperti jenengan)
       'o': 'و',
       
       // Konsonan standar

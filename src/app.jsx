@@ -35,7 +35,7 @@ export default function App() {
             <div className="relative z-10">
               <span className="text-xs uppercase tracking-widest text-amber-300 font-semibold">Kitab Digital</span>
               <h1 className="text-3xl font-serif font-bold mt-1 mb-2">Riyadul Badi'ah</h1>
-              <p className="text-sm text-amber-200/90 italic">Matan Arab Only - Rata Kanan Kiri</p>
+              <p className="text-sm text-amber-200/90 italic">Matan Arab Only - Model Mushaf Rapat</p>
               
               <button 
                 onClick={() => openBab(dummyKitab[0])}
@@ -131,18 +131,22 @@ export default function App() {
               </span>
             </div>
 
-            {/* BLOK MUSHAF: Menggunakan paragraf murni dengan modifikasi CSS Justify tingkat lanjut */}
+            {/* FOKUS REVISI: Efek Kasyidah Tulisan Arab Rata & Mepet Sisi Kiri-Kanan */}
             <div 
-              className="w-full text-justify text-stone-950 font-arabic text-4xl leading-[4.5rem] tracking-tight"
+              className="w-full text-justify text-stone-950 font-arabic text-4xl leading-[5rem] tracking-tight block select-all"
               style={{ 
-                textJustify: 'inter-word',
-                textAlignLast: 'justify'
+                textJustify: 'distribute', // Memaksa perataan berbasis kasyidah/distribusi tulisan Arab
+                textAlignLast: 'justify',  // Memaksa baris terakhir paragraf ikut rata kanan-kiri
+                wordBreak: 'keep-all'      // Mencegah kata Arab terpotong di tengah huruf
               }}
             >
               {selectedBab.kataList.map((item, index) => {
                 const kataMatan = showHarakat ? item.arab : removeHarakat(item.arab);
                 return (
-                  <span key={index} className="inline mx-[0.25rem]">
+                  <span 
+                    key={index} 
+                    className="inline mx-[0.15rem] whitespace-nowrap"
+                  >
                     {kataMatan}
                   </span>
                 );

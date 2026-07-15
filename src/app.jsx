@@ -146,8 +146,8 @@ export default function App() {
               </span>
             </div>
 
-            {/* PENGATURAN BARU: Rata Kiri Kanan Sisi ke Sisi (Justify) */}
-            <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-20 py-4 w-full text-justify" dir="rtl">
+            {/* PENGATURAN BARU: Rapat horizontal di tengah sebagai satu kesatuan kalimat */}
+            <div className="flex flex-wrap items-start justify-center gap-x-1 gap-y-20 py-4 w-full" dir="rtl">
               {selectedBab.kataList.map((item, index) => {
                 
                 // Konversi teks lugot sesuai mode yang dipilih
@@ -158,7 +158,7 @@ export default function App() {
                 return (
                   <div 
                     key={index} 
-                    className="relative flex flex-col items-center justify-start min-w-[45px] px-0.5 flex-grow text-center"
+                    className="relative flex flex-col items-center justify-start min-w-[35px] px-0"
                   >
                     
                     {/* Teks Matan Arab */}
@@ -187,8 +187,6 @@ export default function App() {
                   </div>
                 );
               })}
-              {/* Elemen bantu pengisi spasi baris terakhir agar tidak terlalu melar terpisah jauh */}
-              <div className="flex-grow-[100] min-w-[45px]"></div>
             </div>
 
             {/* Footer Halaman */}

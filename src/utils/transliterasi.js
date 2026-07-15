@@ -1,39 +1,81 @@
- // ==========================================
-// 1. RUMUS TRANSLITERASI (LATIN -> PEGON)
-// ==========================================
-export const latinToPegon = (text) => {
+// Fungsi untuk mengubah huruf Latin menjadi Arab Pegon sesuai kaidah
+export function latinToPegon(text) {
   if (!text) return '';
-  let str = text.toLowerCase();
+  
+  let hasil = text.toLowerCase();
 
-  // Mapping Diftong & Konsonan Khusus Pegon Sunda
-  const map = [
-    { l: 'nya', p: 'ڽَ' }, { l: 'nyi', p: 'ڽِ' }, { l: 'nyu', p: 'ڽُ' }, { l: 'nye', p: 'ڽِك' }, { l: 'nyo', p: 'ڽُك' }, { l: 'ny', p: 'ڽ' },
-    { l: 'nga', p: 'ڠَ' }, { l: 'ngi', p: 'ڠِ' }, { l: 'ngu', p: 'ڠُ' }, { l: 'nge', p: 'ڠِك' }, { l: 'ngo', p: 'ڠُك' }, { l: 'ng', p: 'ڠ' },
-    { l: 'ga', p: 'ݢَ' }, { l: 'gi', p: 'ݢِ' }, { l: 'gu', p: 'ݢُ' }, { l: 'ge', p: 'ݢِك' }, { l: 'go', p: 'ݢُك' }, { l: 'g', p: 'ݢ' },
-    { l: 'pa', p: 'ڤَ' }, { l: 'pi', p: 'ڤِ' }, { l: 'pu', p: 'ڤُ' }, { l: 'pe', p: 'ڤِك' }, { l: 'po', p: 'ڤُك' }, { l: 'p', p: 'ڤ' },
-    { l: 'ca', p: 'چَ' }, { l: 'ci', p: 'چِ' }, { l: 'cu', p: 'چُ' }, { l: 'ce', p: 'چِك' }, { l: 'co', p: 'چُك' }, { l: 'c', p: 'چ' },
-    
-    // Vokal Dasar
-    { l: 'a', p: 'َ' }, { l: 'i', p: 'ِ' }, { l: 'u', p: 'ُ' }, { l: 'e', p: 'ِك' }, { l: 'o', p: 'ُك' },
-    
-    // Konsonan Standar
-    { l: 'b', p: 'ب' }, { l: 't', p: 'ت' }, { l: 'j', p: 'ج' }, { l: 'd', p: 'د' },
-    { l: 'r', p: 'ر' }, { l: 'z', p: 'ز' }, { l: 's', p: 'س' }, { l: 'k', p: 'ك' },
-    { l: 'l', p: 'ل' }, { l: 'm', p: 'م' }, { l: 'n', p: 'ن' }, { l: 'w', p: 'و' },
-    { l: 'h', p: 'ه' }, { l: 'y', p: 'ي' }, { l: ' ', p: ' ' }
-  ];
+  // 1. Bersihkan huruf-huruf asing yang tidak ada dalam Pegon
+  hasil = hasil.replaceAll('x', '');
 
-  map.forEach(item => {
-    str = str.replaceAll(item.l, item.p);
-  });
+  // 2. Ganti kombinasi Huruf Vokal Khusus & Diftong
+  const vokalKhusus = {
+    'ieu': 'إِيُّو', // Kombinasi hamzah jeer, ya, dan wawu pees
+    'ae': 'أَٰي',
+    'ai': 'أَيْ',
+    'au': 'أَوْ',
+  };
 
-  return str;
-};
+  for (const [latin, pegon] of Object.entries(vokalKhusus)) {
+    hasil = hasil.replaceAll(latin, pegon);
+  }
 
-// ==========================================
-// 2. FUNGSI HAPUS HARAKAT (GUNDUL)
-// ==========================================
-export const removeHarakat = (text) => {
+  // 3. Ganti kombinasi 2 huruf Konsonan (Kombinasi Khusus)
+  const konsonanKhusus = {
+    'ng': 'ڠ', // Gain titik tiga di atas
+    'ny': 'ۑ', // Ya titik tiga di bawah
+    'ch': 'چ', // Ca (Jim titik tiga)
+    'kh': 'خ',
+    'sh': 'ش'
+  };
+
+  for (const [latin, pegon] of Object.entries(konsonanKhusus)) {
+    hasil = hasil.replaceAll(latin, pegon);
+  }
+
+  // 4. Ganti Vokal Standar (Menggunakan Hamzah + Harakat/Huruf Saksi)
+  const vokalStandar = {
+    'a': 'أَ', // Hamzah Patah (Alif otomatis mengikuti)
+    'i': 'إِ', // Hamzah Jeer (Di bawah Alif)
+    'u': 'أُ', // Hamzah Pees
+    'e': 'إِ', // Sering disamakan dengan jeer atau menggunakan tanda alif+ya
+    'o': 'أوْ' // Hamzah + Wawu
+  };
+
+  for (const [latin, pegon] of Object.entries(vokalStandar)) {
+    hasil = hasil.replaceAll(latin, pegon);
+  }
+
+  // 5. Ganti Konsonan Tunggal Standar
+  const konsonanTunggal = {
+    'b': 'ب',
+    'c': 'چ', 
+    'd': 'د',
+    'f': 'ف',
+    'g': 'ݢ', // Kaf titik untuk G
+    'h': 'ه',
+    'j': 'ج',
+    'k': 'ك',
+    'l': 'ل',
+    'm': 'م',
+    'n': 'ن',
+    'p': 'ڤ', // Fa titik tiga untuk P
+    'q': 'ق',
+    'r': 'ر',
+    's': 'س',
+    't': 'ت',
+    'v': 'ڤ',
+    'w': 'و',
+    'y': 'ي',
+    'z': 'ز',
+    ' ': ' ' 
+  };
+
+  // Jalankan penggantian sisa huruf satu per satu
+  return hasil.split('').map(char => konsonanTunggal[char] || char).join('');
+}
+
+// Fungsi pembantu untuk menghilangkan harakat pada matan Arab
+export function removeHarakat(text) {
   if (!text) return '';
-  return text.replace(/[\u064B-\u0652]/g, "");
-};
+  return text.replace(/[\u064B-\u0652]/g, '');
+}

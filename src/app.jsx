@@ -102,13 +102,22 @@ export default function App() {
               </span>
             </div>
 
-            <div 
-              className="w-full text-justify text-stone-950 font-arabic text-4xl leading-[6.5rem] tracking-tight select-all"
-              style={{ 
-                textAlignLast: 'justify',  
-                textJustify: 'distribute'
-              }}
-            >
+            <div
+  className="
+  w-full
+  text-justify
+  text-stone-950
+  font-arabic
+  text-4xl
+  leading-[6rem]
+  tracking-tight
+  select-all
+  "
+  style={{
+    textAlignLast: 'justify',
+    textJustify: 'distribute'
+  }}
+>
               {selectedBab.kataList.map((item, index) => {
                 const kataMatan = showHarakat ? item.arab : removeHarakat(item.arab);
                 
@@ -122,30 +131,43 @@ export default function App() {
                       {/* Teks Arab Matan diamankan di z-10 agar selalu di atas */}
                       <span className="relative z-10">{kataMatan}</span>
 
-                      {/* AREA LUGOT: Diperbaiki agar putaran selalu sama, tapi bungkus baris sesuai jenis bahasanya */}
-                      {lugotMode !== 'hide' && (
-                        <span
-                          className="absolute pointer-events-none z-0"
-                          style={{ 
-                            top: '48px',
-                            right: '0',
-                            transform: 'rotate(-28deg)', // Miring SELALU kanan ke kiri untuk semua mode
-                            transformOrigin: 'top right',
-                            width: '90px', // Lebar ruang lugot
-                            textAlign: 'right', // Memaksa kotak selalu menempel ke kanan (pangkal huruf Arab)
-                            textAlignLast: 'auto', 
-                            textJustify: 'auto',
-                            direction: lugotMode === 'pegon' ? 'rtl' : 'ltr' // Kunci arah pemotongan baris baru
-                          }}
-                        >
-                          <span 
-                            className="inline-block text-[10px] leading-[1.2rem] text-amber-950 font-semibold whitespace-normal break-words bg-[#fffdf9]/95 px-1 py-0.5 rounded shadow-sm border border-stone-200/50"
-                            style={{ textAlign: lugotMode === 'pegon' ? 'right' : 'left' }}
-                          >
-                            {displayLugot}
-                          </span>
-                        </span>
-                      )}
+                      {/* AREA LUGOT */}
+{lugotMode !== 'hide' && (
+  <span
+    className="absolute pointer-events-none z-0"
+    style={{
+      top: '38px',
+      right: '0',
+      transform: 'rotate(-28deg)',
+      transformOrigin: 'top right',
+      minWidth: '35px',
+      maxWidth: '80px',
+      direction: lugotMode === 'pegon' ? 'rtl' : 'ltr',
+      textAlign: 'right',
+      lineHeight: '0.95rem'
+    }}
+  >
+    <span
+      className="
+      inline-block
+      text-[10px]
+      leading-[0.95rem]
+      font-semibold
+      whitespace-normal
+      break-words
+      text-amber-950
+      "
+      style={{
+        textAlign:
+          lugotMode === 'pegon'
+            ? 'right'
+            : 'left'
+      }}
+    >
+      {displayLugot}
+    </span>
+  </span>
+)}
                     </span>
                     {" "}
                   </React.Fragment>

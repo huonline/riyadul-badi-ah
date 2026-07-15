@@ -1,38 +1,7 @@
-import React, { useState } from 'react';
+import { dummyKitab } from './dataRiyad.js';
 import { latinToPegon, removeHarakat } from './utils/transliterasi';
 
-// Data Sampel / Dummy Kitab untuk Pengujian Tampilan
-const dummyKitab = [
-  {
-    id: 1,
-    noBab: "٠١",
-    judulBab: "Muqaddimah",
-    deskripsi: "Mukadimah & Bismillah",
-    jumlahKata: 8,
-    kataList: [
-      { arab: "بِسْمِ", lugot: "kalawan nyebat" },
-      { arab: "اللهِ", lugot: "jenengan Allah" },
-      { arab: "الرَّحْمٰنِ", lugot: "nu Maha Welas" },
-      { arab: "الرَّحِيْمِ", lugot: "tur nu Maha Asih" },
-      { arab: "اَلْحَمْدُ", lugot: "ari sadaya puji" },
-      { arab: "لِلّٰهِ", lugot: "eta kagungan Allah" },
-      { arab: "رَبِّ", lugot: "anu mengeranan" },
-      { arab: "الْعَالَمِيْنَ", lugot: "sadaya alam" },
-    ]
-  },
-  {
-    id: 2,
-    noBab: "٠٢",
-    judulBab: "Fasl Arkanul Islam",
-    deskripsi: "Rukun-rukun Islam",
-    jumlahKata: 3,
-    kataList: [
-      { arab: "أَرْكَانُ", lugot: "ari pirang-pirang rukun" },
-      { arab: "الإِسْلاَمِ", lugot: "Islam" },
-      { arab: "خَمْسَةٌ", lugot: "eta aya lima" },
-    ]
-  }
-];
+
 
 export default function App() {
   const [currentView, setCurrentView] = useState('home'); // 'home' | 'reader'

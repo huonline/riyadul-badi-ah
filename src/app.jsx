@@ -144,64 +144,58 @@ export default function App() {
               </span>
             </div>
 
-            {/* AREA UTAMA: Rata Kanan Kiri dengan Distribusi Kasyidah Arab */}
-            <div 
-              className="w-full text-justify text-stone-950 font-arabic text-4xl leading-[6.5rem] tracking-tight block select-all"
-              style={{ 
-                textJustify: 'distribute', 
-                textAlignLast: 'justify',  
-                wordBreak: 'keep-all'      
-              }}
+         <div
+    dir="rtl"
+    className="
+        kitab-page
+        select-all
+        text-stone-950
+        font-arabic
+    "
+>
+    {selectedBab.kataList.map((item, index) => {
+
+        const kataMatan =
+            showHarakat
+                ? item.arab
+                : removeHarakat(item.arab);
+
+        let displayLugot = "";
+
+        if (lugotMode === "latin")
+            displayLugot = item.lugot;
+
+        if (lugotMode === "pegon")
+            displayLugot = latinToPegon(item.lugot);
+
+        return (
+
+            <span
+                key={index}
+                className="kata"
             >
-              {selectedBab.kataList.map((item, index) => {
-                const kataMatan = showHarakat ? item.arab : removeHaceted(item.arab);
-                
-                // Konversi teks lugot sesuai pilihan user
-                let displayLugot = '';
-                if (lugotMode === 'latin') displayLugot = item.lugot;
-                if (lugotMode === 'pegon') displayLugot = latinToPegon(item.lugot);
 
-                return (
-                  <span 
-                    key={index} 
-                    className="inline-block relative mx-[0.25rem] whitespace-nowrap"
-                  >
-                    {/* Tulisan Matan Utama */}
-                    <span className="relative z-10">{kataMatan}</span>
+                <span className="arab">
+                    {kataMatan}
+                </span>
 
-                    {/* Tulisan Lugot Jenggotan Menggantung di Bawah Kata */}
-                    {lugotMode !== 'hide' && (
-                      <span
-                        className="absolute top-[55%] right-1 origin-top-right pointer-events-none z-0"
-                        style={{ 
-                          transform: 'rotate(-28deg)',
-                          width: '75px'
-                        }}
-                      >
-                        <span 
-                          className="text-[9px] leading-tight text-amber-900/90 font-medium whitespace-normal break-words bg-[#fffdf9]/90 px-0.5 rounded shadow-3xs flex flex-col items-start text-right"
-                          dir={lugotMode === 'pegon' ? 'rtl' : 'ltr'}
-                        >
-                          {displayLugot}
-                        </span>
-                      </span>
-                    )}
-                  </span>
-                );
-              })}
-            </div>
+                {lugotMode !== "hide" && (
 
-            {/* Footer Halaman */}
-            <div className="text-center pt-8 border-t border-stone-100 mt-auto">
-              <span className="text-xs text-stone-400 font-mono">
-                Halaman {selectedBab.id}
-              </span>
-            </div>
+                    <span
+                        className={`lugot ${
+                            lugotMode === "pegon"
+                                ? "rtl"
+                                : "ltr"
+                        }`}
+                    >
+                        {displayLugot}
+                    </span>
 
-          </main>
-        </div>
-      )}
+                )}
 
-    </div>
-  );
-}
+            </span>
+
+        );
+
+    })}
+</div>

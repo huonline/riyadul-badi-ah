@@ -122,32 +122,28 @@ export default function App() {
                       
                       <span className="relative z-10">{kataMatan}</span>
 
-                      {/* AREA LUGOT: Rotasi Asli dengan Trik Bottom-Up CSS */}
+                      {/* AREA LUGOT: Kotak Dihapus, Murni Teks Mengambang */}
                       {lugotMode !== 'hide' && (
                         <span
                           className="absolute pointer-events-none z-0"
                           style={{ 
                             top: '55px', 
                             right: '0',
-                            transform: 'rotate(-28deg)', 
+                            transform: 'rotate(-28deg)', // Dikunci Permanen
                             transformOrigin: 'top right', 
                             width: '100px'
                           }}
                         >
-                          {/* 
-                            KUNCI UTAMA: 
-                            1. flex-wrap-reverse: Memaksa baris baru naik ke atas (bottom-up)
-                            2. split(' '): Memecah kalimat menjadi kata per kata agar rapi
-                            3. justifyContent: Menempelkan teks ke kanan kotak
-                          */}
                           <span 
-                            className="flex flex-wrap-reverse text-[10px] leading-[1.3rem] text-amber-950 font-semibold bg-[#fffdf9]/95 p-1 rounded shadow-sm border border-stone-200/50"
+                            /* Dihapus: bg, p-1, rounded, shadow, border. Ditambah: text-amber-900 font-bold agar jelas */
+                            className="flex flex-wrap-reverse text-[11px] leading-[1.3rem] text-amber-900 font-bold"
                             style={{ 
                               direction: lugotMode === 'pegon' ? 'rtl' : 'ltr',
                               justifyContent: lugotMode === 'pegon' ? 'flex-start' : 'flex-end',
                             }}
                           >
-                            {displayLugot.split(' ').map((word, wIdx) => (
+                            {/* Diamankan dengan (displayLugot || '') agar fungsi split tidak error jika lugot kosong */}
+                            {(displayLugot || '').split(' ').map((word, wIdx) => (
                               <span key={wIdx} className="mx-[1.5px] whitespace-nowrap">
                                 {word}
                               </span>

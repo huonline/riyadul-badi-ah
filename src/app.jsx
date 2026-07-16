@@ -122,32 +122,27 @@ export default function App() {
                       
                       <span className="relative z-10">{kataMatan}</span>
 
-                      {/* AREA LUGOT: Kotak Dihapus, Murni Teks Mengambang */}
+                      {/* AREA LUGOT: Trik pemisah kata dihapus, diganti aliran RTL Blok Murni */}
                       {lugotMode !== 'hide' && (
                         <span
                           className="absolute pointer-events-none z-0"
                           style={{ 
-                            top: '55px', 
+                            top: '52px', // Posisi di-paskan agar menempel manis di bawah matan
                             right: '0',
-                            transform: 'rotate(-28deg)', // Dikunci Permanen
+                            transform: 'rotate(-28deg)', // Rotasi baku dipertahankan
                             transformOrigin: 'top right', 
-                            width: '100px'
+                            width: '115px' // Agak dilebarkan agar teks tidak terlalu cepat terpotong
                           }}
                         >
                           <span 
-                            /* Dihapus: bg, p-1, rounded, shadow, border. Ditambah: text-amber-900 font-bold agar jelas */
-                            className="flex flex-wrap-reverse text-[11px] leading-[1.3rem] text-amber-900 font-bold"
+                            /* Menggunakan 'block' murni. Jika teks panjang, otomatis baris ke-2 turun ke bawah */
+                            className="block text-[11px] leading-[1.3rem] text-amber-900 font-bold"
                             style={{ 
                               direction: lugotMode === 'pegon' ? 'rtl' : 'ltr',
-                              justifyContent: lugotMode === 'pegon' ? 'flex-start' : 'flex-end',
+                              textAlign: lugotMode === 'pegon' ? 'right' : 'left',
                             }}
                           >
-                            {/* Diamankan dengan (displayLugot || '') agar fungsi split tidak error jika lugot kosong */}
-                            {(displayLugot || '').split(' ').map((word, wIdx) => (
-                              <span key={wIdx} className="mx-[1.5px] whitespace-nowrap">
-                                {word}
-                              </span>
-                            ))}
+                            {displayLugot}
                           </span>
                         </span>
                       )}

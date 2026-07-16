@@ -122,7 +122,7 @@ export default function App() {
                       
                       <span className="relative z-10">{kataMatan}</span>
 
-                      {/* AREA LUGOT: Dikembalikan ke aturan Flex agar rapat, tapi dengan arah NORMAL (Top to Bottom) */}
+                      {/* AREA LUGOT: Menggunakan ide "Blok" murni agar otomatis turun ke kiri */}
                       {lugotMode !== 'hide' && (
                         <span
                           className="absolute pointer-events-none z-0"
@@ -131,22 +131,18 @@ export default function App() {
                             right: '0',
                             transform: 'rotate(-28deg)', 
                             transformOrigin: 'top right', 
-                            width: '120px' // Lebar disesuaikan agar tidak gampang terpotong
+                            width: '115px', // Paksa batas lebar blok
+                            display: 'block', // JADIKAN BLOK MURNI
+                            direction: 'rtl', // Selalu paksa baris baru jatuh ke kiri
+                            textAlign: 'right', // Rata kanan (nemplek ke huruf Arab)
+                            textAlignLast: 'right', // Mencegah spasi melar akibat bocoran dari matan
+                            textJustify: 'auto', // Reset justify
+                            whiteSpace: 'normal', // Izinkan potong baris
+                            wordBreak: 'break-word' // Cegah kata panjang merusak batas
                           }}
                         >
-                          <span 
-                            /* KUNCI: flex-wrap biasa (bukan reverse), agar baris baru jatuhnya ke Bawah */
-                            className="flex flex-wrap text-[11px] leading-[1.3rem] text-amber-900 font-bold"
-                            style={{ 
-                              direction: lugotMode === 'pegon' ? 'rtl' : 'ltr',
-                              justifyContent: 'flex-start', // Di RTL, flex-start otomatis mulai dari Kanan
-                            }}
-                          >
-                            {(displayLugot || '').split(' ').map((word, wIdx) => (
-                              <span key={wIdx} className="mx-[1.5px] whitespace-nowrap">
-                                {word}
-                              </span>
-                            ))}
+                          <span className="text-[11px] leading-[1.3rem] text-amber-900 font-bold block">
+                            {displayLugot}
                           </span>
                         </span>
                       )}

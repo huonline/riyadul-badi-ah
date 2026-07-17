@@ -112,17 +112,18 @@ export default function App() {
               {selectedBab.kataList.map((item, index) => {
                 const kataMatan = showHarakat ? item.arab : removeHarakat(item.arab);
                 
-               // Ubah bagian ini di App.jsx
-let displayLugot = '';
-if (lugotMode === 'latin') displayLugot = item.lugot;
-if (lugotMode === 'pegon') displayLugot = item.pegon; // Tidak perlu memanggil latinToPegon() lagi
+                // Ubah logika pengambilannya langsung dari data JSON baru
+                let displayLugot = '';
+                if (lugotMode === 'latin') displayLugot = item.lugot;
+                if (lugotMode === 'pegon') displayLugot = item.pegon;
+
                 return (
                   <React.Fragment key={index}>
                     <span className="relative inline">
                       
                       <span className="relative z-10">{kataMatan}</span>
 
-                      {/* AREA LUGOT: Menggunakan ide "Blok" murni agar otomatis turun ke kiri */}
+                      {/* AREA LUGOT */}
                       {lugotMode !== 'hide' && (
                         <span
                           className="absolute pointer-events-none z-0"
@@ -131,17 +132,24 @@ if (lugotMode === 'pegon') displayLugot = item.pegon; // Tidak perlu memanggil l
                             right: '0',
                             transform: 'rotate(-28deg)', 
                             transformOrigin: 'top right', 
-                            width: '115px', // Paksa batas lebar blok
-                            display: 'block', // JADIKAN BLOK MURNI
-                            direction: 'rtl', // Selalu paksa baris baru jatuh ke kiri
-                            textAlign: 'right', // Rata kanan (nemplek ke huruf Arab)
-                            textAlignLast: 'right', // Mencegah spasi melar akibat bocoran dari matan
-                            textJustify: 'auto', // Reset justify
-                            whiteSpace: 'normal', // Izinkan potong baris
-                            wordBreak: 'break-word' // Cegah kata panjang merusak batas
+                            width: '80px', // <-- FOKUS UBAHAN: Lebar dipendekin agar otomatis bikin barisan baru
+                            display: 'block', 
+                            direction: 'rtl', 
+                            textAlign: 'right', 
+                            textAlignLast: 'right', 
+                            textJustify: 'auto', 
+                            whiteSpace: 'normal', 
+                            wordBreak: 'break-word' 
                           }}
                         >
-                          <span className="text-[11px] leading-[1.3rem] text-amber-900 font-bold block">
+                          <span 
+                            className="text-[11px] leading-[1.3rem] text-amber-900 font-bold block"
+                            style={{
+                              direction: lugotMode === 'pegon' ? 'rtl' : 'ltr',
+                              textAlign: lugotMode === 'pegon' ? 'right' : 'left',
+                              textAlignLast: lugotMode === 'pegon' ? 'right' : 'left'
+                            }}
+                          >
                             {displayLugot}
                           </span>
                         </span>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { dummyKitab } from './dataRiyad.js';
-import { latinToPegon, removeHarakat } from './utils/transliterasi';
+import { removeHarakat } from './utils/transliterasi';
 
 export default function App() {
   const [currentView, setCurrentView] = useState('home'); // 'home' | 'reader'
@@ -112,10 +112,10 @@ export default function App() {
               {selectedBab.kataList.map((item, index) => {
                 const kataMatan = showHarakat ? item.arab : removeHarakat(item.arab);
                 
-                let displayLugot = '';
-                if (lugotMode === 'latin') displayLugot = item.lugot;
-                if (lugotMode === 'pegon') displayLugot = latinToPegon(item.lugot);
-
+               // Ubah bagian ini di App.jsx
+let displayLugot = '';
+if (lugotMode === 'latin') displayLugot = item.lugot;
+if (lugotMode === 'pegon') displayLugot = item.pegon; // Tidak perlu memanggil latinToPegon() lagi
                 return (
                   <React.Fragment key={index}>
                     <span className="relative inline">

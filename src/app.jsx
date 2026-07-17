@@ -112,7 +112,6 @@ export default function App() {
               {selectedBab.kataList.map((item, index) => {
                 const kataMatan = showHarakat ? item.arab : removeHarakat(item.arab);
                 
-                // Ubah logika pengambilannya langsung dari data JSON baru
                 let displayLugot = '';
                 if (lugotMode === 'latin') displayLugot = item.lugot;
                 if (lugotMode === 'pegon') displayLugot = item.pegon;
@@ -123,7 +122,7 @@ export default function App() {
                       
                       <span className="relative z-10">{kataMatan}</span>
 
-                      {/* AREA LUGOT */}
+                      {/* AREA LUGOT: Penerapan Trik Paragraf Gantung (Hanging Indent) */}
                       {lugotMode !== 'hide' && (
                         <span
                           className="absolute pointer-events-none z-0"
@@ -132,22 +131,22 @@ export default function App() {
                             right: '0',
                             transform: 'rotate(-28deg)', 
                             transformOrigin: 'top right', 
-                            width: '80px', // <-- FOKUS UBAHAN: Lebar dipendekin agar otomatis bikin barisan baru
+                            width: '95px', // Lebar dikunci agar bisa membungkus teks panjang
                             display: 'block', 
-                            direction: 'rtl', 
-                            textAlign: 'right', 
-                            textAlignLast: 'right', 
-                            textJustify: 'auto', 
-                            whiteSpace: 'normal', 
-                            wordBreak: 'break-word' 
+                            zIndex: 0
                           }}
                         >
                           <span 
                             className="text-[11px] leading-[1.3rem] text-amber-900 font-bold block"
                             style={{
-                              direction: lugotMode === 'pegon' ? 'rtl' : 'ltr',
-                              textAlign: lugotMode === 'pegon' ? 'right' : 'left',
-                              textAlignLast: lugotMode === 'pegon' ? 'right' : 'left'
+                              direction: 'rtl', // Paksa RTL agar baris memotong ke arah yang sama
+                              textAlign: 'right', // Rata kanan (nempel di Arab)
+                              whiteSpace: 'normal', 
+                              wordBreak: 'break-word',
+                              
+                              // INI KUNCI UTAMANYA:
+                              paddingRight: '24px', // Baris ke-2 didorong 24px ke kiri
+                              textIndent: '-24px'   // Baris ke-1 ditarik paksa 24px ke kanan
                             }}
                           >
                             {displayLugot}
